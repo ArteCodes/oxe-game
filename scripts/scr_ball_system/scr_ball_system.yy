@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_ball_system",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_ball_system",
+  "parent":{
+    "name":"Oxe!",
+    "path":"Oxe!.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -49,5 +49,14 @@ if (dodge.is_dodging) {
     image_speed = 0;
     image_index = 0;
 }
-    // --- Atualiza sprite pelo facing ---
-    // Troque pelos seus sprites reais depois!
+// --- Disparo da bolinha ---
+if (mouse_check_button_pressed(mb_right) && dodge.can_act()) {
+    ball.try_fire(x, y, mouse_x, mouse_y, "Instances", id);
+}
+
+// --- Coleta ao passar por cima (estado FLOOR) ---
+if (ball.state == ball.FLOOR) {
+    if (point_distance(x, y, ball.ball_ref.x, ball.ball_ref.y) < 16) {
+        ball.on_ball_collected();
+    }
+}
