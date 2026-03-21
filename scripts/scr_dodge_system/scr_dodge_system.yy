@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_dodge_system",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_dodge_system",
+  "parent":{
+    "name":"Oxe!",
+    "path":"Oxe!.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_collision_system",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_collision_system",
+  "parent":{
+    "name":"Oxe!",
+    "path":"Oxe!.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
