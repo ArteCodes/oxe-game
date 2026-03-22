@@ -5,7 +5,7 @@
 function AimSystem(_layer_name) constructor {
 
     tilemap     = layer_tilemap_get_id(layer_get_id(_layer_name));
-    max_bounces = 5; // maximo de quiques simulados na previsao
+    max_bounces = 3; // maximo de quiques simulados na previsao
 
     /// @function   draw(ox, oy, tx, ty, speed, distance)
     /// @description Simula a trajetoria no papel e desenha sem criar objetos.

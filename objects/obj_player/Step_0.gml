@@ -49,6 +49,24 @@ if (dodge.is_dodging) {
     y += movement.vy;
 }
 
+// --- 8b. Knockback e i-frames ---
+var _kb = hp.update();
+if (_kb.vx != 0 || _kb.vy != 0) {
+    // Knockback respeita colisao com paredes
+    var _kbx = collision.resolve_x(x, y, _kb.vx);
+    var _kby = collision.resolve_y(x, y, _kb.vy);
+    x += _kbx;
+    y += _kby;
+}
+
+// Pisca durante i-frames
+image_alpha = (hp.iframes mod 6 < 3) ? 0.3 : 1.0;
+
+// Morte
+if (hp.dead) {
+    room_restart();
+}
+
 // --- 9. Coleta da bolinha no chao ---
 // Coleta automatica ao passar por cima da bolinha parada
 if (ball.state == ball.FLOOR && instance_exists(ball.ball_ref)) {

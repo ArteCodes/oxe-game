@@ -38,6 +38,29 @@ if (distance_traveled >= max_distance) {
     if (instance_exists(owner)) owner.ball.on_ball_stopped(id);
 }
 
+// Acerta inimigo — some em fumaca
+if (instance_exists(obj_enemy_test)) {
+    if (point_distance(x, y, obj_enemy_test.x, obj_enemy_test.y) < 16) {
+
+        // Cria fumaca
+        var _ps = part_system_create();
+        part_system_position(_ps, obj_enemy_test.x, obj_enemy_test.y);
+        var _pe = part_emitter_create(_ps);
+        part_emitter_burst(_ps, _pe, obj_enemy_test.part_type, 20);
+
+        // Destroi o sistema de particulas apos 1 segundo
+        with (obj_enemy_test) {
+            alarm[0] = 60; // usa o alarm do inimigo para destruir o ps
+            part_system_ref = _ps;
+        }
+
+        // Destroi inimigo e recolhe a bolinha
+        with (obj_enemy_test) instance_destroy();
+        owner.ball.on_ball_collected();
+        instance_destroy();
+    }
+}
+
 // Coleta automática ao jogador passar por cima (só após o delay)
 if (collect_delay <= 0 && instance_exists(owner)) {
     if (point_distance(x, y, owner.x, owner.y) < 16) {
