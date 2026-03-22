@@ -14,10 +14,8 @@ depth = -100;
 // Camera
 view_enabled = true;
 view_visible[0] = true;
-camera_set_view_size(view_camera[0], 480, 270);
+camera_set_view_size(view_camera[0], 620, 320);
 window_set_fullscreen(true);
-view_set_wport(0, display_get_width());
-view_set_hport(0, display_get_height());
 var _w = display_get_width();
 var _h = display_get_height();
 surface_resize(application_surface, _w, _h);
