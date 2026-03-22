@@ -60,7 +60,11 @@ if (_kb.vx != 0 || _kb.vy != 0) {
 }
 
 // Pisca durante i-frames
-image_alpha = (hp.iframes mod 6 < 3) ? 0.3 : 1.0;
+if (hp.iframes > 0) {
+    image_alpha = (hp.iframes mod 6 < 3) ? 0.3 : 1.0;
+} else {
+    image_alpha = 1.0;
+}
 
 // Morte
 if (hp.dead) {
