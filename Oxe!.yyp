@@ -34,6 +34,7 @@
     {"id":{"name":"scr_dodge_system","path":"scripts/scr_dodge_system/scr_dodge_system.yy",},},
     {"id":{"name":"scr_movement_system","path":"scripts/scr_movement_system/scr_movement_system.yy",},},
     {"id":{"name":"scr_slingshot_system","path":"scripts/scr_slingshot_system/scr_slingshot_system.yy",},},
+    {"id":{"name":"spr_ball","path":"sprites/spr_ball/spr_ball.yy",},},
     {"id":{"name":"spr_player_temp","path":"sprites/spr_player_temp/spr_player_temp.yy",},},
     {"id":{"name":"spr_tiles_test_grass_1","path":"sprites/spr_tiles_test_grass_1/spr_tiles_test_grass_1.yy",},},
     {"id":{"name":"spr_tiles_test","path":"sprites/spr_tiles_test/spr_tiles_test.yy",},},

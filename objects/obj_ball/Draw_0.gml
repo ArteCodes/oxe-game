@@ -10,6 +10,5 @@ if (ds_list_size(trail) > 1) {
 }
 draw_set_alpha(1);
 
-// Bolinha
-draw_set_color(c_white);
-draw_circle(x, y, 6, false);
+draw_set_color(c_white); // tint branco (mantém cor original do sprite)
+draw_sprite(spr_ball, 0, x, y);
