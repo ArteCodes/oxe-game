@@ -85,3 +85,16 @@ if (dodge.is_dodging) {
         case 2: image_index = 24 + (image_index mod 4); break; // idle esquerda
     }
 }
+var _cam = view_camera[0];
+var _cx = camera_get_view_x(_cam);
+var _cy = camera_get_view_y(_cam);
+var _vw = camera_get_view_width(_cam);
+var _vh = camera_get_view_height(_cam);
+
+var _tx = x - _vw / 2;
+var _ty = y - _vh / 2;
+
+_tx = clamp(_tx, 0, room_width - _vw);
+_ty = clamp(_ty, 0, room_height - _vh);
+
+camera_set_view_pos(_cam, lerp(_cx, _tx, 0.1), lerp(_cy, _ty, 0.1));
