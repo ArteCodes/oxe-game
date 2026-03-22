@@ -10,6 +10,11 @@ function BallSystem() constructor {
 
     state    = IDLE;
     ball_ref = noone; // referencia ao obj_ball ativo
+	
+	// --- Recarga da bolsa ---
+	RELOAD_TIME   = 120; // 2 segundos a 60fps
+	is_reloading  = false;
+	reload_timer  = 0;
 
     /// @function   try_fire(ox, oy, tx, ty, layer, owner, speed, distance)
     /// @description Cria a bolinha e a dispara na direcao do alvo.
@@ -74,5 +79,43 @@ function BallSystem() constructor {
     static can_fire = function() {
         return state == IDLE;
     };
+	/// @function   update_reload(holding_r)
+	/// @description Chame todo Step passando se R esta sendo segurado.
+	///              Ao completar destroi a bolinha atual e volta para IDLE.
+	/// @param {bool} holding_r  true enquanto tecla R estiver pressionada
+	/// @returns {bool} true se acabou de completar a recarga
+	static update_reload = function(_holding) {
+	    // So pode recarregar se tiver bolinha ativa ou no chao
+	    if (state == IDLE) {
+	        is_reloading = false;
+	        reload_timer = 0;
+	        return false;
+	    }
 
+	    if (_holding) {
+	        is_reloading = true;
+	        reload_timer = min(reload_timer + 1, RELOAD_TIME);
+
+	        // Completou a recarga
+	        if (reload_timer >= RELOAD_TIME) {
+	            try_reload();
+	            is_reloading = false;
+	            reload_timer = 0;
+	            return true;
+	        }
+	    } else {
+	        // Soltou antes de completar — cancela
+	        is_reloading = false;
+	        reload_timer = 0;
+	    }
+
+	    return false;
+	};
+
+	/// @function   get_reload_ratio()
+	/// @description Retorna o progresso da recarga entre 0.0 e 1.0.
+	/// @returns {real}
+	static get_reload_ratio = function() {
+	    return reload_timer / RELOAD_TIME;
+	};
 }
