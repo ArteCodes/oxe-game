@@ -19,6 +19,10 @@ function DodgeSystem(_distance, _duration_frames, _cooldown_frames) constructor 
     _dodge_vx   = 0;
     _dodge_vy   = 0;
 
+    // Direcao do deslize para sprite — mesmo padrao do MovementSystem
+    // 0 = baixo | 1 = cima | 2 = esquerda | 3 = direita
+    facing = 0;
+
     /// @function   try_dodge(dir_x, dir_y)
     /// @description Tenta iniciar o deslize na direcao do input.
     ///              Falha silenciosamente se em dodge, cooldown ou sem direcao.
@@ -33,10 +37,17 @@ function DodgeSystem(_distance, _duration_frames, _cooldown_frames) constructor 
         timer      = duration_frames;
 
         // Normaliza diagonal e calcula velocidade por frame
-        var _len          = sqrt(_dx * _dx + _dy * _dy);
+        var _len             = sqrt(_dx * _dx + _dy * _dy);
         var _speed_per_frame = distance / duration_frames;
         _dodge_vx = (_dx / _len) * _speed_per_frame;
         _dodge_vy = (_dy / _len) * _speed_per_frame;
+
+        // Guarda o facing da direcao do deslize
+        if (abs(_dx) > abs(_dy)) {
+            facing = (_dx > 0) ? 3 : 2; // direita : esquerda
+        } else {
+            facing = (_dy > 0) ? 0 : 1; // baixo : cima
+        }
 
         return true;
     };

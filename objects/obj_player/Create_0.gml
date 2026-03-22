@@ -1,6 +1,6 @@
 // Sistemas de movimento
-movement  = new MovementSystem(4, 0.8, 0.18);   // velocidade, aceleração, fricção
-dodge     = new DodgeSystem(200, 20, 36);        // distância, duração, cooldown
+movement  = new MovementSystem(4, 0.5, 0.18);   // velocidade, aceleração, fricção
+dodge     = new DodgeSystem(100, 20, 36);        // distância, duração, cooldown
 collision = new CollisionSystem("Tiles_Wall", 12, 20, 12, 12); // colisão com tiles
 
 // Sistemas de combate

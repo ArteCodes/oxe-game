@@ -61,17 +61,21 @@ if (ball.state == ball.FLOOR && instance_exists(ball.ball_ref)) {
 sprite_index = spr_player;
 
 if (dodge.is_dodging) {
-    image_speed = 1;
-
+    image_speed = 2;
+    switch (dodge.facing) {
+        case 0: image_index = 4  + (image_index mod 4); break; // deslize baixo
+        case 1: image_index = 12 + (image_index mod 4); break; // deslize cima
+        case 3: image_index = 20 + (image_index mod 4); break; // deslize direita
+        case 2: image_index = 28 + (image_index mod 4); break; // deslize esquerda
+    }
 } else if (movement.is_moving()) {
-    image_speed = 1;
+    image_speed = 2;
     switch (movement.facing) {
         case 0: image_index = 4  + (image_index mod 4); break; // andar baixo
         case 1: image_index = 12 + (image_index mod 4); break; // andar cima
         case 3: image_index = 20 + (image_index mod 4); break; // andar direita
         case 2: image_index = 28 + (image_index mod 4); break; // andar esquerda
     }
-
 } else {
     image_speed = 1;
     switch (movement.facing) {
