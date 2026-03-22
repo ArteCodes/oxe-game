@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"scr_movement_system",
+  "%Name":"scr_aim_system",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"scr_movement_system",
+  "name":"scr_aim_system",
   "parent":{
     "name":"Systems",
     "path":"folders/Systems.yy",

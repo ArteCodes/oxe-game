@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"scr_collision_system",
   "parent":{
-    "name":"Oxe!",
-    "path":"Oxe!.yyp",
+    "name":"Systems",
+    "path":"folders/Systems.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

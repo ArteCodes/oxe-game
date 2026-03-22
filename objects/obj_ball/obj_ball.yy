@@ -11,8 +11,8 @@
   "name":"obj_ball",
   "overriddenProperties":[],
   "parent":{
-    "name":"Oxe!",
-    "path":"Oxe!.yyp",
+    "name":"Objects",
+    "path":"folders/Objects.yy",
   },
   "parentObjectId":null,
   "persistent":false,

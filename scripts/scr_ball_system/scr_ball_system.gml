@@ -19,14 +19,16 @@ function BallSystem() constructor {
     /// @param {real}   target_y    Y do alvo (mouse)
     /// @param {string} layer_name  Nome da layer de instâncias
     /// @returns {bool} true se disparou
-	static try_fire = function(_ox, _oy, _tx, _ty, _layer, _owner) {
+	static try_fire = function(_ox, _oy, _tx, _ty, _layer, _owner, _speed, _distance) {
 	    if (state != IDLE) return false;
 
 	    ball_ref = instance_create_layer(_ox, _oy, _layer, obj_ball);
-	    ball_ref.owner = _owner; // recebe o owner como parâmetro
+	    ball_ref.owner        = _owner;
+	    ball_ref.initial_speed = _speed;
+	    ball_ref.max_distance  = _distance;
 	    var _dir = point_direction(_ox, _oy, _tx, _ty);
-	    ball_ref.vx = lengthdir_x(8, _dir);
-	    ball_ref.vy = lengthdir_y(8, _dir);
+	    ball_ref.vx = lengthdir_x(_speed, _dir);
+	    ball_ref.vy = lengthdir_y(_speed, _dir);
 
 	    state = FIRED;
 	    return true;

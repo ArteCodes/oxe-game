@@ -1,4 +1,4 @@
-// --- 1. Lê input ---
+// --- 1. Le input ---
 var _ix = keyboard_check(ord("D")) - keyboard_check(ord("A"));
 var _iy = keyboard_check(ord("S")) - keyboard_check(ord("W"));
 
@@ -6,22 +6,30 @@ var _iy = keyboard_check(ord("S")) - keyboard_check(ord("W"));
 if (mouse_check_button_pressed(mb_left) && dodge.can_dodge()) {
     dodge.try_dodge(_ix, _iy);
     movement.stop();
+    slingshot.cancel(); // cancela carregamento se comecar o dodge
 }
 
-// --- 3. Atualiza dodge (passa posição e colisão para checar paredes) ---
+// --- 3. Atualiza dodge ---
 var _dv = dodge.update(x, y, collision);
 
-// --- 4. Movimento normal (bloqueado durante o dodge) ---
+// --- 4. Estilingue ---
+var _can_shoot = dodge.can_act() && ball.can_fire();
+slingshot.update(mouse_check_button(mb_right), _can_shoot);
+
+// --- 5. Movimento normal (bloqueado durante dodge) ---
+// Velocidade reduzida a 50% durante carregamento
+movement.max_speed = slingshot.is_charging ? 2 : 4;
+
 if (dodge.can_act()) {
     movement.move(_ix, _iy);
 }
 movement.apply_friction();
 
-// --- 5. Colisão do movimento normal com paredes ---
+// --- 6. Colisao com paredes ---
 movement.vx = collision.resolve_x(x, y, movement.vx);
 movement.vy = collision.resolve_y(x, y, movement.vy);
 
-// --- 6. Aplica posição ---
+// --- 7. Aplica posicao ---
 if (dodge.is_dodging) {
     x += _dv.vx;
     y += _dv.vy;
@@ -30,16 +38,14 @@ if (dodge.is_dodging) {
     y += movement.vy;
 }
 
-// --- 7. Atualiza sprite ---
-    /*
-	switch (movement.facing) {
-        case 0: sprite_index = spr_player_down;  break;
-        case 1: sprite_index = spr_player_up;    break;
-        case 2: sprite_index = spr_player_left;  break;
-        case 3: sprite_index = spr_player_right; break;
+// --- 8. Coleta da bolinha no chao ---
+if (ball.state == ball.FLOOR && instance_exists(ball.ball_ref)) {
+    if (point_distance(x, y, ball.ball_ref.x, ball.ball_ref.y) < 16) {
+        ball.on_ball_collected();
     }
-	*/
-// Trocar spr_player_temp pelos sprites reais quando tiver os assets
+}
+
+// --- 9. Sprite ---
 sprite_index = spr_player_temp;
 if (dodge.is_dodging) {
     image_speed = 0;
@@ -48,15 +54,4 @@ if (dodge.is_dodging) {
 } else {
     image_speed = 0;
     image_index = 0;
-}
-// --- Disparo da bolinha ---
-if (mouse_check_button_pressed(mb_right) && dodge.can_act()) {
-    ball.try_fire(x, y, mouse_x, mouse_y, "Instances", id);
-}
-
-// --- Coleta ao passar por cima (estado FLOOR) ---
-if (ball.state == ball.FLOOR) {
-    if (point_distance(x, y, ball.ball_ref.x, ball.ball_ref.y) < 16) {
-        ball.on_ball_collected();
-    }
 }
