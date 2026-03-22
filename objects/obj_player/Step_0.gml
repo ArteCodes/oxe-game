@@ -58,13 +58,26 @@ if (ball.state == ball.FLOOR && instance_exists(ball.ball_ref)) {
 }
 
 // --- 10. Sprite ---
-// Trocar spr_player_temp pelos sprites reais quando tiver os assets
-sprite_index = spr_player_temp;
+sprite_index = spr_player;
+
 if (dodge.is_dodging) {
-    image_speed = 0; // congela animacao durante o deslize
+    image_speed = 1;
+
 } else if (movement.is_moving()) {
-    image_speed = 1; // animacao de andar
+    image_speed = 1;
+    switch (movement.facing) {
+        case 0: image_index = 4  + (image_index mod 4); break; // andar baixo
+        case 1: image_index = 12 + (image_index mod 4); break; // andar cima
+        case 3: image_index = 20 + (image_index mod 4); break; // andar direita
+        case 2: image_index = 28 + (image_index mod 4); break; // andar esquerda
+    }
+
 } else {
-    image_speed = 0; // idle
-    image_index = 0;
+    image_speed = 1;
+    switch (movement.facing) {
+        case 0: image_index = 0  + (image_index mod 4); break; // idle baixo
+        case 1: image_index = 8  + (image_index mod 4); break; // idle cima
+        case 3: image_index = 16 + (image_index mod 4); break; // idle direita
+        case 2: image_index = 24 + (image_index mod 4); break; // idle esquerda
+    }
 }
