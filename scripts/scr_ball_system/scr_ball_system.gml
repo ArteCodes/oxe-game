@@ -1,49 +1,58 @@
 /// @function   BallSystem()
 /// @description Gerencia o estado da bolinha do jogador.
-///              Estados: IDLE (tem bola), FIRED (bola ativa), FLOOR (bola no chao).
+///              Estados: IDLE (tem bola), FIRED (voando), FLOOR (parada no chao).
 function BallSystem() constructor {
 
-    // Estados possíveis
+    // --- Estados possiveis ---
     IDLE  = 0; // tem bolinha, pode disparar
     FIRED = 1; // bolinha voando
-    FLOOR = 2; // bolinha parada no chão esperando coleta
+    FLOOR = 2; // bolinha parada no chao esperando coleta
 
-    state      = IDLE;
-    ball_ref   = noone; // referência ao obj_ball ativo
+    state    = IDLE;
+    ball_ref = noone; // referencia ao obj_ball ativo
 
-    /// @function   try_fire(owner_x, owner_y, target_x, target_y, layer_name)
-    /// @description Tenta disparar a bolinha. Só funciona no estado IDLE.
-    /// @param {real}   owner_x     X do jogador
-    /// @param {real}   owner_y     Y do jogador
-    /// @param {real}   target_x    X do alvo (mouse)
-    /// @param {real}   target_y    Y do alvo (mouse)
-    /// @param {string} layer_name  Nome da layer de instâncias
-    /// @returns {bool} true se disparou
-	static try_fire = function(_ox, _oy, _tx, _ty, _layer, _owner, _speed, _distance) {
-	    if (state != IDLE) return false;
+    /// @function   try_fire(ox, oy, tx, ty, layer, owner, speed, distance)
+    /// @description Cria a bolinha e a dispara na direcao do alvo.
+    ///              So funciona no estado IDLE.
+    /// @param {real}        ox        X do jogador
+    /// @param {real}        oy        Y do jogador
+    /// @param {real}        tx        X do alvo (mouse)
+    /// @param {real}        ty        Y do alvo (mouse)
+    /// @param {string}      layer     Nome da layer de instancias
+    /// @param {Id.Instance} owner     Referencia ao obj_player
+    /// @param {real}        speed     Velocidade inicial (vem do SlingshotSystem)
+    /// @param {real}        distance  Alcance total (vem do SlingshotSystem)
+    /// @returns {bool} true se disparou com sucesso
+    static try_fire = function(_ox, _oy, _tx, _ty, _layer, _owner, _speed, _distance) {
+        if (state != IDLE) return false;
 
-	    ball_ref = instance_create_layer(_ox, _oy, _layer, obj_ball);
-	    ball_ref.owner        = _owner;
-	    ball_ref.initial_speed = _speed;
-	    ball_ref.max_distance  = _distance;
-	    var _dir = point_direction(_ox, _oy, _tx, _ty);
-	    ball_ref.vx = lengthdir_x(_speed, _dir);
-	    ball_ref.vy = lengthdir_y(_speed, _dir);
+        // Cria a bolinha e configura seus parametros
+        ball_ref               = instance_create_layer(_ox, _oy, _layer, obj_ball);
+        ball_ref.owner         = _owner;
+        ball_ref.initial_speed = _speed;
+        ball_ref.max_distance  = _distance;
 
-	    state = FIRED;
-	    return true;
-	};
+        // Aplica velocidade na direcao do alvo
+        var _dir   = point_direction(_ox, _oy, _tx, _ty);
+        ball_ref.vx = lengthdir_x(_speed, _dir);
+        ball_ref.vy = lengthdir_y(_speed, _dir);
+
+        state = FIRED;
+        return true;
+    };
 
     /// @function   on_ball_stopped(ball)
-    /// @description Chamado pelo obj_ball quando para no chão.
-    /// @param {Id.Instance} ball  Referência ao obj_ball que parou
+    /// @description Chamado pelo obj_ball quando para no chao.
+    ///              Transita para FLOOR — bolinha coletavel.
+    /// @param {Id.Instance} ball  Referencia ao obj_ball que parou
     static on_ball_stopped = function(_ball) {
         ball_ref = _ball;
         state    = FLOOR;
     };
 
     /// @function   on_ball_collected()
-    /// @description Chamado quando o jogador coleta a bolinha.
+    /// @description Chamado ao coletar a bolinha.
+    ///              Destroi o obj_ball e volta para IDLE.
     static on_ball_collected = function() {
         if (instance_exists(ball_ref)) instance_destroy(ball_ref);
         ball_ref = noone;
@@ -52,7 +61,7 @@ function BallSystem() constructor {
 
     /// @function   try_reload()
     /// @description Descarta a bolinha atual e volta para IDLE.
-    ///              Usada quando o jogador busca nova bolinha da bolsa.
+    ///              Usado ao buscar nova bolinha da bolsa (bolinha anterior some).
     static try_reload = function() {
         if (state == IDLE) return;
         if (instance_exists(ball_ref)) instance_destroy(ball_ref);
@@ -61,7 +70,7 @@ function BallSystem() constructor {
     };
 
     /// @function   can_fire()
-    /// @returns {bool} true se pode disparar agora
+    /// @returns {bool} true apenas no estado IDLE
     static can_fire = function() {
         return state == IDLE;
     };
