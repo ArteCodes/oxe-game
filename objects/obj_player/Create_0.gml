@@ -16,12 +16,13 @@ aim = new AimSystem("Tiles_Wall");
 depth = -100;
 
 // Camera
-view_enabled = true;
-view_visible[0] = true;
-camera_set_view_size(view_camera[0], 620, 320);
-window_set_fullscreen(true);
+camera = new CameraSystem(620, 320, id);
+camera.init();
+
+// HUB
+hud = new HudSystem(id, spr_heart_1, spr_heart_2, spr_heart_3);
+
+// Sincroniza o tamanho do GUI com a janela
 var _w = display_get_width();
 var _h = display_get_height();
-surface_resize(application_surface, _w, _h);
-view_set_wport(0, _w);
-view_set_hport(0, _h);
+display_set_gui_size(_w, _h);

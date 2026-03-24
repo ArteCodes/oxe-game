@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scr_can_system",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scr_can_system",
+  "parent":{
+    "name":"Systems",
+    "path":"folders/Systems.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
