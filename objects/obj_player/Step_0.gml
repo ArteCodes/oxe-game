@@ -1,24 +1,42 @@
+// --- 0. Pausa --- bloqueia toda logica se o jogo estiver pausado
+// Usa asset_get_index para nao crashar se obj_pause ainda nao existir no projeto
+var _pause_asset = asset_get_index("obj_pause");
+if (_pause_asset != -1 && instance_exists(_pause_asset)) {
+    var _pause_inst = instance_find(_pause_asset, 0);
+    if (_pause_inst != noone && _pause_inst.pause.is_paused) exit;
+}
+
 // --- 1. Input ---
 var _ix = keyboard_check(ord("D")) - keyboard_check(ord("A"));
 var _iy = keyboard_check(ord("S")) - keyboard_check(ord("W"));
 
-// --- 2. Dodge ---
-if (mouse_check_button_pressed(mb_left) && dodge.can_dodge()) {
+// --- 2. Dodge (tecla: Espaco) ---
+if (keyboard_check_pressed(vk_space) && dodge.can_dodge()) {
     dodge.try_dodge(_ix, _iy);
     movement.stop();
     slingshot.cancel();
 }
+
 var _dv = dodge.update(x, y, collision);
 
 // --- 3. Estilingue ---
-var _can_shoot = dodge.can_act() && ball.can_fire();
+var _can_shoot = dodge.can_act() && ball.can_fire() && !inventory.is_reloading;
 slingshot.update(mouse_check_button(mb_right), _can_shoot);
 
-// --- 4. Recarga da bolsa ---
+// --- 4. Recarga da bolsa (tecla R — BallSystem) ---
 ball.update_reload(keyboard_check(ord("R")));
 
-// --- 5. Velocidade maxima baseada no estado atual ---
-if (ball.is_reloading) {
+// --- 5. Inventario --- atualiza timer de recarga e detecta coleta de pedra extra
+var _reload_done = inventory.update();
+if (_reload_done) {
+    // recarga do estoque terminou — devolve a bolinha ao estilingue
+    ball.state = ball.IDLE;
+}
+
+// --- 6. Velocidade maxima baseada no estado ---
+if (inventory.is_reloading) {
+    movement.max_speed = 0; // parado e vulneravel durante recarga do estoque
+} else if (ball.is_reloading) {
     movement.max_speed = 0.8;
 } else if (slingshot.is_charging) {
     movement.max_speed = 2;
@@ -26,17 +44,17 @@ if (ball.is_reloading) {
     movement.max_speed = 4;
 }
 
-// --- 6. Movimento ---
-if (dodge.can_act()) {
+// --- 7. Movimento ---
+if (dodge.can_act() && !inventory.is_reloading) {
     movement.move(_ix, _iy);
 }
 movement.apply_friction();
 
-// --- 7. Colisao com paredes ---
+// --- 8. Colisao com paredes ---
 movement.vx = collision.resolve_x(x, y, movement.vx);
 movement.vy = collision.resolve_y(x, y, movement.vy);
 
-// --- 8. Aplica posicao ---
+// --- 9. Aplica posicao ---
 if (dodge.is_dodging) {
     x += _dv.vx;
     y += _dv.vy;
@@ -45,37 +63,31 @@ if (dodge.is_dodging) {
     y += movement.vy;
 }
 
-// --- 8b. Knockback e i-frames ---
+// --- 10. Knockback e i-frames ---
 var _kb = hp.update();
 if (_kb.vx != 0 || _kb.vy != 0) {
-    var _kbx = collision.resolve_x(x, y, _kb.vx);
-    var _kby = collision.resolve_y(x, y, _kb.vy);
-    x += _kbx;
-    y += _kby;
+    x += collision.resolve_x(x, y, _kb.vx);
+    y += collision.resolve_y(x, y, _kb.vy);
 }
 
 // Pisca durante i-frames
-if (hp.iframes > 0) {
-    image_alpha = (hp.iframes mod 6 < 3) ? 0.3 : 1.0;
-} else {
-    image_alpha = 1.0;
-}
+image_alpha = (hp.iframes > 0 && hp.iframes mod 6 < 3) ? 0.3 : 1.0;
 
 // Morte
 if (hp.dead) {
-    room_restart();
+    room_restart(); // substituir por GameOverSystem quando estiver pronto
 }
 
-// --- 9. Coleta da bolinha no chao ---
+// --- 11. Coleta da bolinha no chao ---
 if (ball.state == ball.FLOOR && instance_exists(ball.ball_ref)) {
     if (point_distance(x, y, ball.ball_ref.x, ball.ball_ref.y) < 16) {
         ball.on_ball_collected();
     }
 }
 
-// --- 10. Sprite ---
+// --- 12. Sprite ---
 if (dodge.is_dodging) {
-    image_speed = 3;    // animação em alta velocidade — sensação de rajada
+    image_speed = 3;
     switch (dodge.facing) {
         case 0: sprite_index = spr_player_run_D; break;
         case 1: sprite_index = spr_player_run_T; break;
@@ -99,5 +111,6 @@ if (dodge.is_dodging) {
         case 2: sprite_index = spr_player_idle_L; break;
     }
 }
-// --- 11. Camera ---
+
+// --- 13. Camera ---
 camera.update();

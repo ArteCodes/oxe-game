@@ -1,12 +1,14 @@
 // --- Sai se o player nao existe ---
 if (!instance_exists(obj_player)) exit;
 
-// --- Lê os dados do player via getters e propriedades publicas ---
+// --- Le os dados do player via getters e propriedades publicas ---
 var _hearts        = obj_player.hp.hearts;
 var _max_hearts    = obj_player.hp.max_hearts;
 var _charge_ratio  = obj_player.slingshot.get_charge_ratio();
 var _reload_ratio  = obj_player.ball.get_reload_ratio();
-// var _stone_count = obj_player.inventory.count; // ativar quando InventorySystem existir
+// Pedra na mao (IDLE = tem pedra no estilingue) + estoque no bolso
+var _stone_in_hand = (obj_player.ball.state == obj_player.ball.IDLE) ? 1 : 0;
+var _stone_count   = _stone_in_hand + obj_player.inventory.count;
 
 var _ww = display_get_gui_width();
 var _wh = display_get_gui_height();
@@ -14,8 +16,8 @@ var _wh = display_get_gui_height();
 // -----------------------------------------------------------------------
 // CORACOES
 // -----------------------------------------------------------------------
-var _cx = 48;
-var _cy = 48;
+var _cx    = 48;
+var _cy    = 48;
 var _scale = (_max_hearts > 0) ? (_hearts / _max_hearts) : 0;
 
 // Camada de fundo — coracao vazio no tamanho maximo
@@ -24,6 +26,24 @@ draw_sprite_ext(spr_heart_2, 0, _cx, _cy, 1, 1, 0, c_white, 1);
 // Camada de frente — coracao cheio que encolhe com a vida
 if (_scale > 0) {
     draw_sprite_ext(spr_heart_1, 0, _cx, _cy, _scale, _scale, 0, c_white, 1);
+}
+
+// -----------------------------------------------------------------------
+// CONTADOR DE PEDRAS NO ESTOQUE
+// -----------------------------------------------------------------------
+// Sprite da pedra + numero abaixo dos coracoes. So aparece se houver pedras.
+if (_stone_count > 0) {
+    var _px = 48;  // alinhado com o coracao
+    var _py = 90;  // abaixo do coracao
+
+    draw_sprite(spr_ball, 0, _px, _py);
+
+    draw_set_color(c_white);
+    draw_set_alpha(1);
+    draw_set_font(-1);
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_middle);
+    draw_text(_px + 18, _py, "x" + string(_stone_count));
 }
 
 // -----------------------------------------------------------------------

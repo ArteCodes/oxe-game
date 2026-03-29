@@ -7,7 +7,10 @@ collision = new CollisionSystem("Tiles_Wall", 12, 18, 12, 12);
 ball      = new BallSystem();
 slingshot = new SlingshotSystem(ball);
 slingshot.owner_ref = id;
-hp = new HealthSystem(3);
+hp        = new HealthSystem(3);
+
+// --- Inventario de pedras ---
+inventory = new InventorySystem(3); // maximo de 3 pedras no bolso
 
 // --- Mira ---
 aim = new AimSystem("Tiles_Wall");
@@ -18,7 +21,7 @@ depth  = -100;
 camera = new CameraSystem(620, 320, id);
 camera.init();
 
-// --- HUD gerenciado pelo obj_hud — nao instanciar HudSystem aqui ---
+// --- HUD gerenciado pelo obj_hud ---
 
 // --- Sincroniza GUI com a janela ---
 var _w = display_get_width();
