@@ -1,4 +1,4 @@
-// Rastro — conecta as últimas posições como uma linha branca com fade
+// --- Rastro --- conecta as ultimas posicoes como linha com fade
 if (ds_list_size(trail) > 1) {
     for (var _i = 1; _i < ds_list_size(trail); _i++) {
         var _p1 = trail[| _i - 1];
@@ -10,5 +10,6 @@ if (ds_list_size(trail) > 1) {
 }
 draw_set_alpha(1);
 
-draw_set_color(c_white); // tint branco (mantém cor original do sprite)
+// --- Sprite ---
+draw_set_color(c_white);
 draw_sprite(spr_ball, 0, x, y);

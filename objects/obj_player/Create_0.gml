@@ -1,28 +1,26 @@
-// Sistemas de movimento
-movement  = new MovementSystem(4, 0.5, 0.18);   // velocidade, aceleração, fricção
-dodge     = new DodgeSystem(100, 20, 36);        // distância, duração, cooldown
-collision = new CollisionSystem("Tiles_Wall", 12, 18, 12, 12); // colisão com tiles
+// --- Sistemas de movimento ---
+movement  = new MovementSystem(4, 0.5, 0.18);
+dodge     = new DodgeSystem(100, 20, 36);
+collision = new CollisionSystem("Tiles_Wall", 12, 18, 12, 12);
 
-// Sistemas de combate
-ball      = new BallSystem();          // gerencia estado da bolinha
-slingshot = new SlingshotSystem(ball); // gerencia carregamento e disparo
-slingshot.owner_ref = id;             // passa referência do player para o estilingue
-
+// --- Sistemas de combate ---
+ball      = new BallSystem();
+slingshot = new SlingshotSystem(ball);
+slingshot.owner_ref = id;
 hp = new HealthSystem(3);
 
-// Sistemas de mira
+// --- Mira ---
 aim = new AimSystem("Tiles_Wall");
-// Garante que o player é desenhado acima dos tiles
-depth = -100;
+aim.init(); // resolve o tilemap apos o Room estar carregado
 
-// Camera
+// --- Camera ---
+depth  = -100;
 camera = new CameraSystem(620, 320, id);
 camera.init();
 
-// HUB
-hud = new HudSystem(id, spr_heart_1, spr_heart_2, spr_heart_3);
+// --- HUD gerenciado pelo obj_hud — nao instanciar HudSystem aqui ---
 
-// Sincroniza o tamanho do GUI com a janela
+// --- Sincroniza GUI com a janela ---
 var _w = display_get_width();
 var _h = display_get_height();
 display_set_gui_size(_w, _h);

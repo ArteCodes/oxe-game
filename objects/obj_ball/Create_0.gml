@@ -1,21 +1,20 @@
-// Velocidade inicial (sobrescrita pelo SlingshotSystem ao disparar)
+// Velocidade — sobrescrita pelo SlingshotSystem ao disparar
 vx = 0;
 vy = 0;
 
-// Física
-initial_speed    = 8;   // velocidade de lançamento
-max_distance     = 400; // alcance máximo em pixels (sobrescrito pelo SlingshotSystem)
-distance_traveled = 0;  // distância já percorrida
-speed_min        = 2;   // velocidade mínima antes de parar
-bounce_decay     = 0.9; // fator de perda de velocidade a cada quique (não usado com decay linear)
+// Parametros de voo — sobrescritos pelo SlingshotSystem
+initial_speed     = 8;
+max_distance      = 400;
+distance_traveled = 0;
 
 // Coleta
-collect_delay = 20; // frames antes de poder ser coletada (evita coleta instantânea)
-owner         = noone; // referência ao obj_player que disparou
+collect_delay = 20; // frames antes de poder ser coletada (evita coleta instantanea)
+owner         = noone;
 
-// Colisão com paredes
-tilemap = layer_tilemap_get_id(layer_get_id("Tiles_Wall"));
-
-// Rastro visual — histórico das últimas posições
+// Rastro visual
 trail     = ds_list_create();
 trail_max = 10;
+
+// Sistema de fisica — resolve o tilemap via init()
+physics = new BallPhysicsSystem("Tiles_Wall");
+physics.init();
