@@ -1,7 +1,7 @@
 // --- Sistemas de movimento ---
 movement  = new MovementSystem(4, 0.5, 0.18);
 dodge     = new DodgeSystem(100, 20, 36);
-collision = new CollisionSystem("Tiles_Wall", 12, 18, 12, 12);
+collision = new CollisionSystem(["Tiles_Wall", "Tiles_Wall_1"], 10, 10, 10, 12);
 
 // --- Sistemas de combate ---
 ball      = new BallSystem();
