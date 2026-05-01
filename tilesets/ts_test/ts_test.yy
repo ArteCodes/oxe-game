@@ -19,8 +19,8 @@
   "resourceType":"GMTileSet",
   "resourceVersion":"2.0",
   "spriteId":{
-    "name":"spr_tiles_test",
-    "path":"sprites/spr_tiles_test/spr_tiles_test.yy",
+    "name":"compl_Wall1",
+    "path":"sprites/compl_Wall1/compl_Wall1.yy",
   },
   "spriteNoExport":false,
   "textureGroupId":{
@@ -29,10 +29,10 @@
   },
   "tileAnimationFrames":[],
   "tileAnimationSpeed":15.0,
-  "tileHeight":16,
+  "tileHeight":32,
   "tilehsep":0,
   "tilevsep":0,
-  "tileWidth":16,
+  "tileWidth":32,
   "tilexoff":0,
   "tileyoff":0,
   "tile_count":2,

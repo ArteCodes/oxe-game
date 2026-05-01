@@ -1,0 +1,1 @@
+door_sys.update(self);

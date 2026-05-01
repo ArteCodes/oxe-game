@@ -1,0 +1,1 @@
+button_logic = new ButtonLogic(spr_button_off_1, spr_button_on_1);
