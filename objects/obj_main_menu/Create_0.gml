@@ -1,0 +1,1 @@
+menu = new MenuSystem(fnt_menu);

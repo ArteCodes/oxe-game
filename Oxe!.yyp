@@ -10,6 +10,7 @@
   },
   "defaultScriptType":0,
   "Folders":[
+    {"$GMFolder":"","%Name":"Fontes","folderPath":"folders/Fontes.yy","name":"Fontes","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Objects","folderPath":"folders/Objects.yy","name":"Objects","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"strigger","folderPath":"folders/Objects/strigger.yy","name":"strigger","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Rooms","folderPath":"folders/Rooms.yy","name":"Rooms","resourceType":"GMFolder","resourceVersion":"2.0",},
@@ -41,6 +42,7 @@
   },
   "name":"Oxe!",
   "resources":[
+    {"id":{"name":"fnt_menu","path":"fonts/fnt_menu/fnt_menu.yy",},},
     {"id":{"name":"obj_ball","path":"objects/obj_ball/obj_ball.yy",},},
     {"id":{"name":"obj_button_reverse","path":"objects/obj_button_reverse/obj_button_reverse.yy",},},
     {"id":{"name":"obj_button","path":"objects/obj_button/obj_button.yy",},},
@@ -48,10 +50,12 @@
     {"id":{"name":"obj_enemy_test","path":"objects/obj_enemy_test/obj_enemy_test.yy",},},
     {"id":{"name":"obj_enemy","path":"objects/obj_enemy/obj_enemy.yy",},},
     {"id":{"name":"obj_hud","path":"objects/obj_hud/obj_hud.yy",},},
+    {"id":{"name":"obj_main_menu","path":"objects/obj_main_menu/obj_main_menu.yy",},},
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
     {"id":{"name":"obj_spawn_trigger","path":"objects/obj_spawn_trigger/obj_spawn_trigger.yy",},},
     {"id":{"name":"obj_wall_door","path":"objects/obj_wall_door/obj_wall_door.yy",},},
-    {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"rm_main_menu","path":"rooms/rm_main_menu/rm_main_menu.yy",},},
+    {"id":{"name":"rm_main_tutorial","path":"rooms/rm_main_tutorial/rm_main_tutorial.yy",},},
     {"id":{"name":"scr_aim_system","path":"scripts/scr_aim_system/scr_aim_system.yy",},},
     {"id":{"name":"scr_ball_system","path":"scripts/scr_ball_system/scr_ball_system.yy",},},
     {"id":{"name":"scr_button_logic_system","path":"scripts/scr_button_logic_system/scr_button_logic_system.yy",},},
@@ -62,6 +66,7 @@
     {"id":{"name":"scr_enemy_ai_system","path":"scripts/scr_enemy_ai_system/scr_enemy_ai_system.yy",},},
     {"id":{"name":"scr_health_system","path":"scripts/scr_health_system/scr_health_system.yy",},},
     {"id":{"name":"scr_hud_system","path":"scripts/scr_hud_system/scr_hud_system.yy",},},
+    {"id":{"name":"scr_menu_system","path":"scripts/scr_menu_system/scr_menu_system.yy",},},
     {"id":{"name":"scr_movement_system","path":"scripts/scr_movement_system/scr_movement_system.yy",},},
     {"id":{"name":"scr_slingshot_system","path":"scripts/scr_slingshot_system/scr_slingshot_system.yy",},},
     {"id":{"name":"compl_Wall_Door_ani","path":"sprites/compl_Wall_Door_ani/compl_Wall_Door_ani.yy",},},
@@ -104,7 +109,8 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
-    {"roomId":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"roomId":{"name":"rm_main_menu","path":"rooms/rm_main_menu/rm_main_menu.yy",},},
+    {"roomId":{"name":"rm_main_tutorial","path":"rooms/rm_main_tutorial/rm_main_tutorial.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[
