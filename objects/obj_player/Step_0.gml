@@ -11,7 +11,7 @@ var _ix = keyboard_check(ord("D")) - keyboard_check(ord("A"));
 var _iy = keyboard_check(ord("S")) - keyboard_check(ord("W"));
 
 // --- 2. Dodge ---
-if (mouse_check_button_pressed(mb_left) && dodge.can_dodge()) {
+if (keyboard_check(vk_space) && dodge.can_dodge()) {
     dodge.try_dodge(_ix, _iy);
     movement.stop();
     slingshot.cancel();
