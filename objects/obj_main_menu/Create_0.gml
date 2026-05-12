@@ -1,1 +1,1 @@
-menu = new MenuSystem(fnt_menu);
+menu = new MenuSystem(fnt_menu, spr_menu_background);

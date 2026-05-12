@@ -85,6 +85,7 @@
     {"id":{"name":"spr_heart_1","path":"sprites/spr_heart_1/spr_heart_1.yy",},},
     {"id":{"name":"spr_heart_2","path":"sprites/spr_heart_2/spr_heart_2.yy",},},
     {"id":{"name":"spr_heart_3","path":"sprites/spr_heart_3/spr_heart_3.yy",},},
+    {"id":{"name":"spr_menu_background","path":"sprites/spr_menu_background/spr_menu_background.yy",},},
     {"id":{"name":"spr_player_idle_D","path":"sprites/spr_player_idle_D/spr_player_idle_D.yy",},},
     {"id":{"name":"spr_player_idle_L","path":"sprites/spr_player_idle_L/spr_player_idle_L.yy",},},
     {"id":{"name":"spr_player_idle_R","path":"sprites/spr_player_idle_R/spr_player_idle_R.yy",},},

@@ -28,7 +28,7 @@ function PauseMenuSystem(_font) constructor {
                 else { state = "confirm"; index = 1; }
             } 
             else if (state == "confirm") {
-                if (index == 1) room_goto(rm_main_menu); 
+                if (index == 1) game_end(); 
                 else { state = "main"; index = 1; }
             }
         }
