@@ -82,13 +82,15 @@ if (ball.state == ball.FLOOR && instance_exists(ball.ball_ref)) {
 }
 
 // --- 10. Sprite ---
+var _prev_sprite = sprite_index; // guarda o sprite atual antes de trocar
+
 if (dodge.is_dodging) {
     image_speed = 3;    
     switch (dodge.facing) {
         case 0: sprite_index = spr_player_run_D; break;
         case 1: sprite_index = spr_player_run_T; break;
-        case 3: sprite_index = spr_player_run_R; break;
-        case 2: sprite_index = spr_player_run_L; break;
+        case 3: sprite_index = spr_player_dash_R; break;
+        case 2: sprite_index = spr_player_dash_L; break;
     }
 } else if (movement.is_moving()) {
     image_speed = 1.5;
@@ -106,6 +108,11 @@ if (dodge.is_dodging) {
         case 3: sprite_index = spr_player_idle_R; break;
         case 2: sprite_index = spr_player_idle_L; break;
     }
+}
+
+// Se trocou de sprite, reseta pro frame 0
+if (sprite_index != _prev_sprite) {
+    image_index = 0;
 }
 // --- 11. Camera ---
 camera.update();

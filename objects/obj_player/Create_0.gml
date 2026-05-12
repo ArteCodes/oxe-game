@@ -16,7 +16,7 @@ aim = new AimSystem("Tiles_Wall");
 depth = -100;
 
 // Camera
-camera = new CameraSystem(620, 320, id);
+camera = new CameraSystem(1280, 720, id);
 camera.init();
 
 // HUB
