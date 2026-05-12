@@ -1,0 +1,1 @@
+pause_sys.update(self);

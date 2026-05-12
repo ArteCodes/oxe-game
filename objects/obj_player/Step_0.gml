@@ -1,3 +1,11 @@
+// --- 0. Pausa ---
+if (keyboard_check_pressed(vk_escape)) {
+    if (!instance_exists(obj_pause)) {
+        instance_create_layer(0, 0, "Instances", obj_pause);
+        exit; // Interrompe o resto do Step para o player não se mover no frame da pausa
+    }
+}
+
 // --- 1. Input ---
 var _ix = keyboard_check(ord("D")) - keyboard_check(ord("A"));
 var _iy = keyboard_check(ord("S")) - keyboard_check(ord("W"));
@@ -75,7 +83,7 @@ if (ball.state == ball.FLOOR && instance_exists(ball.ball_ref)) {
 
 // --- 10. Sprite ---
 if (dodge.is_dodging) {
-    image_speed = 3;    // animação em alta velocidade — sensação de rajada
+    image_speed = 3;    
     switch (dodge.facing) {
         case 0: sprite_index = spr_player_run_D; break;
         case 1: sprite_index = spr_player_run_T; break;
