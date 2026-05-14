@@ -74,7 +74,6 @@
     {"id":{"name":"compl_Wall_Door_ani","path":"sprites/compl_Wall_Door_ani/compl_Wall_Door_ani.yy",},},
     {"id":{"name":"compl_Wall_Door_Idle","path":"sprites/compl_Wall_Door_Idle/compl_Wall_Door_Idle.yy",},},
     {"id":{"name":"compl_Wall1","path":"sprites/compl_Wall1/compl_Wall1.yy",},},
-    {"id":{"name":"compl_Wall2","path":"sprites/compl_Wall2/compl_Wall2.yy",},},
     {"id":{"name":"spr_ball","path":"sprites/spr_ball/spr_ball.yy",},},
     {"id":{"name":"spr_button_off_1","path":"sprites/spr_button_off_1/spr_button_off_1.yy",},},
     {"id":{"name":"spr_button_off","path":"sprites/spr_button_off/spr_button_off.yy",},},
