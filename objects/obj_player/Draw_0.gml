@@ -7,6 +7,7 @@ if (slingshot.is_charging) {
     aim.draw(x, y, mouse_x, mouse_y, _data.speed, _data.distance);
 }
 
+
 // --- Barra de carregamento do tiro (lado direito) ---
 if (slingshot.is_charging) {
     var _ratio         = slingshot.get_charge_ratio();
