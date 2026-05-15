@@ -8,26 +8,27 @@ function DoorLogic(_btn1, _btn2, _spr_ani) constructor {
     spr_ani = _spr_ani;
     is_opening = false;
 
-    static update = function(_inst) {
-        // 1. Verificação dos Botões (Teoria da Notação de Ponto) [4]
-        if (!is_opening) {
-            if (instance_exists(btn1) && instance_exists(btn2)) {
-                // Acessa a struct "button_logic" dentro de cada botão
-                if (btn1.button_logic.is_active && btn2.button_logic.is_active) {
-                    is_opening = true;
-                    _inst.sprite_index = spr_ani;
-                    _inst.image_index = 0; // Inicia a animação do começo [5, 6]
-                }
-            }
-        } 
-        // 2. Verificação do Fim da Animação
-        else {
-            // Se o quadro atual for o último ou maior que o total de quadros [5]
-            if (_inst.image_index >= _inst.image_number - 1) {
-                with (_inst) {
-                    instance_destroy(); // Deleta o objeto para liberar a passagem [7]
-                }
-            }
-        }
-    }
+	static update = function(_inst) {
+	    if (!is_opening) {
+	        if (instance_exists(btn1) && instance_exists(btn2)) {
+	            if (btn1.button_logic.is_active && btn2.button_logic.is_active) {
+	                is_opening = true;
+	                _inst.sprite_index = spr_ani;
+	                _inst.image_index = 0;
+
+	                // Usamos a notação de ponto para acessar a variável no player [1]
+	                if (instance_exists(obj_player)) {
+	                    obj_player.collision_temp_1 = undefined;
+	                }
+	            }
+	        }
+	    } 
+	    else {
+	        if (_inst.image_index >= _inst.image_number - 1) {
+	            with (_inst) {
+	                instance_destroy(); 
+	            }
+	        }
+	    }
+	}
 }
