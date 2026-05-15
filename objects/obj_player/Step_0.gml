@@ -72,12 +72,23 @@ if (dodge.is_dodging) {
 // --- 8b. Knockback e i-frames ---
 var _kb = hp.update();
 if (_kb.vx != 0 || _kb.vy != 0) {
-    var _kbx = collision.resolve_x(x, y, _kb.vx);
-    var _kby = collision.resolve_y(x, y, _kb.vy);
+    // 1. Resolve a colisão no eixo X passando por ambos os sistemas
+    var _kbx = collision_cheia.resolve_x(x, y, _kb.vx);
+    _kbx = collision_meia.resolve_x(x, y, _kbx); 
+    
+    // 2. Resolve a colisão no eixo Y passando por ambos os sistemas
+    var _kby = collision_cheia.resolve_y(x, y, _kb.vy);
+    _kby = collision_meia.resolve_y(x, y, _kby);
+
+    // Opcional: Se você ainda estiver usando a parede invisível temporária
+    if (collision_temp_1 != undefined) {
+        _kbx = collision_temp_1.resolve_x(x, y, _kbx);
+        _kby = collision_temp_1.resolve_y(x, y, _kby);
+    }
+    
     x += _kbx;
     y += _kby;
 }
-
 // Pisca durante i-frames
 if (hp.iframes > 0) {
     image_alpha = (hp.iframes mod 6 < 3) ? 0.3 : 1.0;

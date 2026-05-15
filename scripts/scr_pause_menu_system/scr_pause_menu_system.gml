@@ -6,7 +6,7 @@ function PauseMenuSystem(_font) constructor {
     index = 0;
     
     main_options = ["Retomar", "Sair"];
-    confirm_options = ["Confirmar Sair?", "Sim", "Não"];
+    confirm_options = ["Confirmar Sair?", "Sim", "Nao"];
 
     static update = function(_inst) {
         var _current_options = (state == "main") ? main_options : confirm_options;

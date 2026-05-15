@@ -1,4 +1,7 @@
 falas = [
-    "Olá! Eu sou o NPC da vila.",
-    "Você precisa encontrar a chave para prosseguir."
+    "*bate as garras*",
+	"kkkkk não consegue mais pegar a pedra ne?",
+    "Relaxa, para procurar outra pedra e so segurar R.",
+	"Na proxima sala, vc vai testar suas habilidades com meus amigos.",
+	"kkkkk *bate as garras*"
 ];
