@@ -50,9 +50,11 @@ movement.apply_friction();
 // --- 7. Colisao com paredes ---
 movement.vx = collision_cheia.resolve_x(x, y, movement.vx);
 movement.vx = collision_meia.resolve_x(x, y, movement.vx);
+movement.vx = collision_barrel.resolve_x(x, y, movement.vx);
 
 movement.vy = collision_cheia.resolve_y(x, y, movement.vy);
 movement.vy = collision_meia.resolve_y(x, y, movement.vy);
+movement.vy = collision_barrel.resolve_y(x, y, movement.vy);
 
 if (collision_temp_1 != undefined) {
     movement.vy = collision_temp_1.resolve_y(x, y, movement.vy);

@@ -1,15 +1,14 @@
 {
   "$GMTileSet":"v1",
-  "%Name":"ts_test",
+  "%Name":"TileSet_barrel",
   "autoTileSets":[],
   "macroPageTiles":{
-    "SerialiseHeight":8,
-    "SerialiseWidth":12,
-    "TileCompressedData":[-96,0,],
-    "TileDataFormat":1,
+    "SerialiseHeight":0,
+    "SerialiseWidth":0,
+    "TileSerialiseData":[],
   },
-  "name":"ts_test",
-  "out_columns":2,
+  "name":"TileSet_barrel",
+  "out_columns":1,
   "out_tilehborder":2,
   "out_tilevborder":2,
   "parent":{
@@ -19,8 +18,8 @@
   "resourceType":"GMTileSet",
   "resourceVersion":"2.0",
   "spriteId":{
-    "name":"compl_Wall1",
-    "path":"sprites/compl_Wall1/compl_Wall1.yy",
+    "name":"spr_barrel",
+    "path":"sprites/spr_barrel/spr_barrel.yy",
   },
   "spriteNoExport":false,
   "textureGroupId":{
@@ -35,5 +34,5 @@
   "tileWidth":32,
   "tilexoff":0,
   "tileyoff":0,
-  "tile_count":4,
+  "tile_count":2,
 }

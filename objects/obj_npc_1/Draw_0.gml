@@ -1,0 +1,2 @@
+// --- Personagem ---
+draw_self();

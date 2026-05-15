@@ -2,6 +2,7 @@ porta_1_aberta = false;
 movement  = new MovementSystem(4, 0.5, 0.18);   // velocidade, aceleração, fricção
 dodge     = new DodgeSystem(100, 20, 36);        // distância, duração, cooldown
 collision_cheia = new CollisionSystem("Tiles_Wall", 1);
+collision_barrel = new CollisionSystem("Barrel", 1);
 collision_meia = new CollisionSystem("Tiles_Wall_md", 2);
 collision_temp_1 = new CollisionSystem("Tiles_Wall_fake", 1);
 
