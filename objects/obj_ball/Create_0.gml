@@ -19,3 +19,5 @@ tilemap = layer_tilemap_get_id(layer_get_id("Tiles_Wall"));
 // Rastro visual — histórico das últimas posições
 trail     = ds_list_create();
 trail_max = 10;
+// --- Evento Criar (Create) do obj_ball ---
+movement = new MovementSystem(5, 0.5, 0.1); // Ajuste os valores como achar melhor para a pedra

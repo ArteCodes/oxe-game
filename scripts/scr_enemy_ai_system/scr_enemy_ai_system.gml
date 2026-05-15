@@ -4,7 +4,7 @@
 /// @param {asset} _spr_idle Sprite parado
 /// @param {asset} _spr_walk Sprite andando
 function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor {
-    // Variáveis de Configuração [4]
+    // Variáveis de Configuração
     follow_speed    = _follow_spd;
     dash_speed      = _dash_spd;
     spr_idle        = _spr_idle;
@@ -19,27 +19,41 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
     static update = function(_inst) {
         var _player = obj_player;
         
-        // Verificação de segurança: se o player não existe, fica parado [3]
+        // Verificação de segurança: se o player não existe, fica parado
         if (!instance_exists(_player)) {
             _inst.sprite_index = spr_idle;
+            // Zera a velocidade se o jogador sumir
+            _inst.movement.vx = 0;
+            _inst.movement.vy = 0;
             return;
         }
 
-        // --- 1. LÓGICA DE MORTE (Colisão com obj_ball) --- [5]
+          // --- 1. LÓGICA DE MORTE (Colisão com obj_ball) ---
         with (_inst) {
-            if (instance_place(x, y, obj_ball)) {
-                instance_destroy(); 
-                return; // Interrompe a execução modular [4]
+            // Guarda a ID do obj_ball com o qual o caranguejo encostou
+            var _ball = instance_place(x, y, obj_ball);
+            
+            // Se de fato ele encostou em um obj_ball
+            if (_ball != noone) {
+                
+                // VERIFICAÇÃO DE IMPACTO USANDO AS VARIÁVEIS DIRETAS DA BOLA
+                if (abs(_ball.vx) > 0.5 || abs(_ball.vy) > 0.5) {
+                    instance_destroy(); 
+                    return; // Interrompe a execução modular
+                }
+                
             }
         }
 
         // --- 2. MÁQUINA DE ESTADOS ---
         switch (state) {
             case "follow":
-                // Segue o jogador usando vetores [6]
+                // Segue o jogador usando vetores
                 var _dir = point_direction(_inst.x, _inst.y, _player.x, _player.y);
-                _inst.x += lengthdir_x(follow_speed, _dir);
-                _inst.y += lengthdir_y(follow_speed, _dir);
+                
+                // MUDANÇA AQUI: Injeta a velocidade no módulo de movimento em vez de alterar o X e Y diretamente!
+                _inst.movement.vx = lengthdir_x(follow_speed, _dir);
+                _inst.movement.vy = lengthdir_y(follow_speed, _dir);
                 
                 // Animação e Direção Visual
                 _inst.sprite_index = spr_walk;
@@ -56,6 +70,11 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
 
             case "charging":
                 _inst.sprite_index = spr_idle;
+                
+                // MUDANÇA AQUI: Garante que o caranguejo zere a velocidade e pare de andar enquanto carrega o dash
+                _inst.movement.vx = 0;
+                _inst.movement.vy = 0;
+                
                 timer++;
                 if (timer >= 60) { // Carrega por 1 segundo
                     state = "dashing";
@@ -64,9 +83,9 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
                 break;
 
             case "dashing":
-                // Avança rápido na direção travada
-                _inst.x += lengthdir_x(dash_speed, dash_dir);
-                _inst.y += lengthdir_y(dash_speed, dash_dir);
+                // MUDANÇA AQUI: Injeta a super velocidade na direção travada
+                _inst.movement.vx = lengthdir_x(dash_speed, dash_dir);
+                _inst.movement.vy = lengthdir_y(dash_speed, dash_dir);
                 
                 timer++;
                 if (timer >= 25) { // Duração do dash
