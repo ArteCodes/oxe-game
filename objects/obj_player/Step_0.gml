@@ -5,6 +5,11 @@ if (keyboard_check_pressed(vk_escape)) {
         exit; // Interrompe o resto do Step para o player não se mover no frame da pausa
     }
 }
+// --- 0.1. colisssão temporaria ---
+if (porta_1_aberta == true && collision_temp_1 != undefined) {
+    collision_temp_1 = undefined;
+}
+
 
 // --- 1. Input ---
 var _ix = keyboard_check(ord("D")) - keyboard_check(ord("A"));
@@ -16,7 +21,9 @@ if (keyboard_check(vk_space) && dodge.can_dodge()) {
     movement.stop();
     slingshot.cancel();
 }
-var _dv = dodge.update(x, y, collision);
+// Ajuste: O Dodge precisa saber com qual colisão checar. 
+// Se o dash deve colidir com tudo, você precisará rodar o update para ambos ou escolher o principal.
+var _dv = dodge.update(x, y, collision_cheia); 
 
 // --- 3. Estilingue ---
 var _can_shoot = dodge.can_act() && ball.can_fire();
@@ -41,8 +48,15 @@ if (dodge.can_act()) {
 movement.apply_friction();
 
 // --- 7. Colisao com paredes ---
-movement.vx = collision.resolve_x(x, y, movement.vx);
-movement.vy = collision.resolve_y(x, y, movement.vy);
+movement.vx = collision_cheia.resolve_x(x, y, movement.vx);
+movement.vx = collision_meia.resolve_x(x, y, movement.vx);
+
+movement.vy = collision_cheia.resolve_y(x, y, movement.vy);
+movement.vy = collision_meia.resolve_y(x, y, movement.vy);
+
+if (collision_temp_1 != undefined) {
+    movement.vy = collision_temp_1.resolve_y(x, y, movement.vy);
+}
 
 // --- 8. Aplica posicao ---
 if (dodge.is_dodging) {
