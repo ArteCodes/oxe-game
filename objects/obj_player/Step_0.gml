@@ -116,3 +116,20 @@ if (sprite_index != _prev_sprite) {
 }
 // --- 11. Camera ---
 camera.update();
+
+// --- 1b. Interação / Diálogo ---
+if (keyboard_check_pressed(ord("E"))) {
+    
+    // Verifica se o diálogo JÁ está rodando
+    if (dialogo.ativo == true) {
+        dialogo.proxima_linha(); // Avança o texto
+    } 
+    else {
+        // Se o diálogo estava desligado, nós iniciamos passando um Array de Strings
+        dialogo.iniciar([
+            "Ola, bem-vindo a masmorra!", 
+            "Cuidado com os espinhos na proxima sala...", 
+            "Boa sorte na sua jornada!"
+        ]);
+    }
+}

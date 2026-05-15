@@ -85,10 +85,15 @@ if (ball.is_reloading) {
 
     draw_set_alpha(1);
 }
-
 // --- Debug: estado do dodge (remover depois) ---
 // draw_set_color(c_white);
 // var _estado = "LIVRE";
 // if (dodge.is_dodging)  _estado = "DODGE";
 // if (dodge.on_cooldown) _estado = "COOLDOWN";
 // draw_text(x - 20, y - 40, _estado);
+
+// --- 5. Sistema de Diálogo ---
+// Adicionado no final para garantir que a caixa de texto fique por cima de tudo
+if (dialogo != undefined) {
+    dialogo.desenhar(x, y - 60); 
+}

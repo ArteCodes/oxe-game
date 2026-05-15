@@ -16,7 +16,7 @@ aim = new AimSystem("Tiles_Wall");
 depth = -100;
 
 // Camera
-camera = new CameraSystem(1280, 720, id);
+camera = new CameraSystem(1100, 600, id);
 camera.init();
 
 // HUB
@@ -26,3 +26,9 @@ hud = new HudSystem(id, spr_heart_1, spr_heart_2, spr_heart_3);
 var _w = display_get_width();
 var _h = display_get_height();
 display_set_gui_size(_w, _h);
+
+// --- Inicialização dos Sistemas ---
+// (seus outros sistemas estarão aqui em cima)
+
+// Inicializa o sistema de diálogos APENAS UMA VEZ
+dialogo = new DialogSystem(); 
