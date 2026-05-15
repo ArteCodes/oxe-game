@@ -118,18 +118,29 @@ if (sprite_index != _prev_sprite) {
 camera.update();
 
 // --- 1b. Interação / Diálogo ---
-if (keyboard_check_pressed(ord("E"))) {
+dialogo.atualizar(); // Faz as letras aparecerem gradativamente [1]
+
+// Verifica se o diálogo JÁ está rodando
+if (dialogo.ativo == true) {
     
-    // Verifica se o diálogo JÁ está rodando
-    if (dialogo.ativo == true) {
-        dialogo.proxima_linha(); // Avança o texto
-    } 
-    else {
-        // Se o diálogo estava desligado, nós iniciamos passando um Array de Strings
-        dialogo.iniciar([
-            "Ola, bem-vindo a masmorra!", 
-            "Cuidado com os espinhos na proxima sala...", 
-            "Boa sorte na sua jornada!"
-        ]);
+    // Se o NPC deixou de existir OU o jogador andou para longe (mais de 80 pixels)
+    if (!instance_exists(npc_foco) || point_distance(x, y, npc_foco.x, npc_foco.y) > 80) {
+        dialogo.ativo = false; // Fecha o balão de diálogo sozinho!
+    }
+    
+    // Se o jogador apertar E enquanto a caixa está aberta (e ele continua perto)
+    else if (keyboard_check_pressed(ord("E"))) {
+        dialogo.proxima_linha(); 
+    }
+} 
+// Se o diálogo está desligado, procura um NPC perto para iniciar
+else {
+    if (keyboard_check_pressed(ord("E"))) {
+        var _alvo = instance_nearest(x, y, obj_interagivel);
+        
+        if (_alvo != noone && point_distance(x, y, _alvo.x, _alvo.y) < 80) {
+            npc_foco = _alvo; 
+            dialogo.iniciar(_alvo.falas);
+        }
     }
 }

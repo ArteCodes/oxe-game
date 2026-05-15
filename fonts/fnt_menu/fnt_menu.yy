@@ -9,7 +9,7 @@
   "canGenerateBitmap":true,
   "charset":0,
   "first":0,
-  "fontName":"Oswald",
+  "fontName":"Comic Sans MS",
   "glyphOperations":0,
   "glyphs":{
     "32":{"character":32,"h":24,"offset":0,"shift":4,"w":4,"x":2,"y":2,},

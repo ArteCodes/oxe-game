@@ -93,7 +93,12 @@ if (ball.is_reloading) {
 // draw_text(x - 20, y - 40, _estado);
 
 // --- 5. Sistema de Diálogo ---
-// Adicionado no final para garantir que a caixa de texto fique por cima de tudo
-if (dialogo != undefined) {
-    dialogo.desenhar(x, y - 60); 
+if (dialogo != undefined && dialogo.ativo == true) {
+    
+    // Verifica se o NPC que estamos conversando existe na sala
+    if (instance_exists(npc_foco)) {
+        
+        // Desenha a caixa usando o X e o Y do NPC, e não do jogador!
+        dialogo.desenhar(npc_foco.x, npc_foco.y - 60); 
+    }
 }
