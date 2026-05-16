@@ -1,6 +1,45 @@
 // --- Personagem ---
 draw_self();
 
+// --- 1. Desenho do Estilingue ---
+// Agora ele sempre aparece e segue o mouse
+var _dir = point_direction(x, y, mouse_x, mouse_y);
+var _dist_hand = 12; // Distância do centro do player para a "mão"
+var _hand_x = x + lengthdir_x(_dist_hand, _dir);
+var _hand_y = y + lengthdir_y(_dist_hand, _dir);
+
+// Cores
+var _c_wood    = make_colour_rgb(101, 67, 33); // Marrom escuro polido
+var _c_elastic = make_colour_rgb(255, 230, 150); // Creme/Elástico
+
+// 1.1 Desenha o corpo do estilingue (Y procedural)
+var _fork_angle = 35;
+var _fork_len   = 8;
+var _fork_l_x = _hand_x + lengthdir_x(_fork_len, _dir - _fork_angle);
+var _fork_l_y = _hand_y + lengthdir_y(_fork_len, _dir - _fork_angle);
+var _fork_r_x = _hand_x + lengthdir_x(_fork_len, _dir + _fork_angle);
+var _fork_r_y = _hand_y + lengthdir_y(_fork_len, _dir + _fork_angle);
+
+// Cabo
+draw_line_width_color(_hand_x, _hand_y, _hand_x - lengthdir_x(6, _dir), _hand_y - lengthdir_y(6, _dir), 3, _c_wood, _c_wood);
+// Hastes do Y
+draw_line_width_color(_hand_x, _hand_y, _fork_l_x, _fork_l_y, 2, _c_wood, _c_wood);
+draw_line_width_color(_hand_x, _hand_y, _fork_r_x, _fork_r_y, 2, _c_wood, _c_wood);
+
+// 1.2 Desenha o elástico
+var _stretch = slingshot_visual_stretch + slingshot_recoil;
+var _pull_x = _hand_x - lengthdir_x(_stretch, _dir);
+var _pull_y = _hand_y - lengthdir_y(_stretch, _dir);
+
+draw_line_width_color(_fork_l_x, _fork_l_y, _pull_x, _pull_y, 1, _c_elastic, _c_elastic);
+draw_line_width_color(_fork_r_x, _fork_r_y, _pull_x, _pull_y, 1, _c_elastic, _c_elastic);
+
+// 1.3 Desenha a bolinha sendo carregada (apenas se ela estiver disponível na bolsa)
+if (ball.state == ball.IDLE) {
+    draw_set_color(c_white);
+    draw_circle(_pull_x, _pull_y, 2, false);
+}
+
 // --- Mira (lancada do centro visual do personagem) ---
 if (slingshot.is_charging) {
     var _data = slingshot.get_shot_data();
@@ -92,7 +131,29 @@ if (ball.is_reloading) {
 // if (dodge.on_cooldown) _estado = "COOLDOWN";
 // draw_text(x - 20, y - 40, _estado);
 
-// --- 5. Sistema de Diálogo ---
+// --- 5. Prompt de Interação "E" ---
+// Procura o objeto interagível mais próximo (NPC ou Porta de Saída)
+var _prox = instance_nearest(x, y, obj_interagivel);
+if (_prox != noone && point_distance(x, y, _prox.x, _prox.y) < 80 && !dialogo.ativo && _prox.visible) {
+    var _ex = _prox.x;
+    var _ey = _prox.y - 50 + sin(current_time / 200) * 5; // Efeito flutuante
+    
+    draw_set_font(-1); // Fonte padrão ou fnt_menu se preferir
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    
+    // Desenha uma pequena sombra/fundo para a letra
+    draw_set_alpha(0.5);
+    draw_set_color(c_black);
+    draw_roundrect(_ex - 12, _ey - 12, _ex + 12, _ey + 12, false);
+    
+    // Desenha o "E"
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+    draw_text(_ex, _ey, "E");
+}
+
+// --- 6. Sistema de Diálogo ---
 if (dialogo != undefined && dialogo.ativo == true) {
     
     // Verifica se o NPC que estamos conversando existe na sala

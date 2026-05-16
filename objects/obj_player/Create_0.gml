@@ -1,4 +1,6 @@
 porta_1_aberta = false; 
+window_set_fullscreen(false);
+window_set_size(1280, 720);
 movement  = new MovementSystem(4, 0.5, 0.18);   // velocidade, aceleração, fricção
 dodge     = new DodgeSystem(100, 20, 36);        // distância, duração, cooldown
 collision_cheia = new CollisionSystem("Tiles_Wall", 1);
@@ -35,3 +37,8 @@ display_set_gui_size(_w, _h);
 
 // Inicializa o sistema de diálogos APENAS UMA VEZ
 dialogo = new DialogSystem(); 
+
+// --- Variáveis Visuais do Estilingue ---
+slingshot_visual_stretch = 0;
+slingshot_recoil = 0;
+current_room_track = -1;

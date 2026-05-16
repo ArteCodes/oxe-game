@@ -51,11 +51,21 @@ if (_inst_enemy != noone && (abs(vx) > 0.5 || abs(vy) > 0.5)) {
     // Destroi inimigo
     instance_destroy(_inst_enemy);
     
-    // Para a bolinha no local (ela "fica lá" como pedido)
-    vx = 0;
-    vy = 0;
-    initial_speed = 0; // Para garantir que não se mova mais
-    distance_traveled = max_distance; // Força estado de parada
+    // --- NOVO: Sistema de Ricochete ---
+    // Inverte a direção e adiciona um desvio aleatório (20 graus)
+    var _dir_atual = point_direction(0, 0, vx, vy);
+    var _nova_dir  = (_dir_atual + 180) + irandom_range(-20, 20);
+    
+    // Mantém a velocidade mas reduz um pouco (impacto)
+    var _nova_spd = initial_speed * 0.7; // Perde 30% da força original no impacto
+    initial_speed = _nova_spd;
+    
+    vx = lengthdir_x(_nova_spd, _nova_dir);
+    vy = lengthdir_y(_nova_spd, _nova_dir);
+    
+    // "Dá mais vida" para a bolinha continuar voando após o ricochete
+    // Reduzimos a distância percorrida para que ela tenha fôlego para o rebote
+    distance_traveled = max(0, distance_traveled - (max_distance * 0.3));
 }
 
 // Coleta automática ao jogador passar por cima (só após o delay)

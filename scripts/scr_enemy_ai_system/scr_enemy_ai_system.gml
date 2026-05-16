@@ -12,9 +12,15 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
     trail_thickness = 4; // Grossura do rastro visual
 
     // Variáveis de Estado Internas
-    state    = "follow"; // Estados: "follow", "charging", "dashing"
+    state    = "waiting"; // Estados: "waiting", "follow", "charging", "dashing", "melee"
     timer    = 0;
+    wait_time = 60; // Tempo de espera inicial (1 segundo)
     dash_dir = 0;
+    melee_range = 28; // Distância para ativar o golpe de garra
+    melee_active = false; // Controla a exibição do efeito de corte
+    melee_preparing = false; // Indica se está preparando o golpe
+    melee_cooldown = 0; // Timer do cooldown
+    melee_cooldown_max = 90; // Tempo entre ataques (1.5 segundos)
 
     static update = function(_inst) {
         var _player = obj_player;
@@ -45,10 +51,25 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
             }
         }
 
+        // --- REDUÇÃO DE COOLDOWN ---
+        if (melee_cooldown > 0) melee_cooldown--;
+
         // --- 2. MÁQUINA DE ESTADOS ---
-        var _is_attacking = (state == "charging" || state == "dashing");
+        var _is_attacking = (state == "charging" || state == "dashing" || state == "melee");
         
         switch (state) {
+            case "waiting":
+                _inst.sprite_index = spr_idle;
+                _inst.movement.vx = 0;
+                _inst.movement.vy = 0;
+                
+                timer++;
+                if (timer >= wait_time) {
+                    state = "follow";
+                    timer = 0;
+                }
+                break;
+
             case "follow":
                 // Segue o jogador diretamente (como antes)
                 var _dir = point_direction(_inst.x, _inst.y, _player.x, _player.y);
@@ -59,12 +80,56 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
                 _inst.sprite_index = spr_walk;
                 _inst.image_xscale = (_player.x < _inst.x) ? -1 : 1;
 
-                // Timer para iniciar a investida
+                // --- NOVO: Checa distância para ataque corpo a corpo ---
+                var _dist = point_distance(_inst.x, _inst.y, _player.x, _player.y);
+                if (_dist < melee_range && melee_cooldown == 0) {
+                    state = "melee";
+                    timer = 0;
+                    melee_active = false; // Não ativa o corte ainda
+                    melee_preparing = true; // Ativa indicador de "carregando golpe"
+                    melee_cooldown = melee_cooldown_max; 
+                }
+
+                // Timer para iniciar a investida (dash) se não estiver perto o suficiente para melee
                 timer++;
                 if (timer >= 120) {
                     state = "charging";
                     timer = 0;
                     dash_dir = _dir;
+                }
+                break;
+
+            case "melee":
+                // Fica parado durante o ataque
+                _inst.movement.vx = 0;
+                _inst.movement.vy = 0;
+                _inst.sprite_index = spr_idle;
+                
+                timer++;
+                
+                // 1. Fase de Preparação (20 frames)
+                if (timer == 20) {
+                    melee_preparing = false;
+                    melee_active = true;
+                    
+                    // Só aplica o dano se o jogador AINDA estiver por perto (range de impacto)
+                    if (instance_exists(_player)) {
+                        var _impact_dist = point_distance(_inst.x, _inst.y, _player.x, _player.y);
+                        if (_impact_dist < melee_range + 12) {
+                            _player.hp.take_damage(_inst.x, _inst.y, _player.x, _player.y);
+                        }
+                    }
+                }
+                
+                // 2. Fase Ativa do Corte (15 frames após a preparação)
+                if (timer >= 35) {
+                    melee_active = false;
+                }
+                
+                // 3. Fim do Estado (Recuperação)
+                if (timer >= 50) {
+                    state = "follow";
+                    timer = 0;
                 }
                 break;
 
@@ -82,6 +147,17 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
             case "dashing":
                 _inst.movement.vx = lengthdir_x(dash_speed, dash_dir);
                 _inst.movement.vy = lengthdir_y(dash_speed, dash_dir);
+                
+                // --- NOVO: Dano durante a investida (dash) ---
+                with (_inst) {
+                    var _p_hit = instance_place(x, y, obj_player);
+                    if (_p_hit != noone) {
+                        _p_hit.hp.take_damage(x, y, _p_hit.x, _p_hit.y);
+                        other.state = "follow";
+                        other.timer = 0;
+                    }
+                }
+
                 timer++;
                 if (timer >= 25) {
                     state = "follow";
@@ -102,16 +178,6 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
                         _inst.movement.vy += lengthdir_y(_push, _pdir);
                     }
                 }
-            }
-        }
-
-        // --- 3. DANO AO JOGADOR (Integração com HealthSystem) ---
-        with (_inst) {
-            var _p_hit = instance_place(x, y, obj_player);
-            if (_p_hit != noone) {
-                // Chama o método take_damage do HealthSystem do player
-                // Passa a fonte do dano (x, y) e a posição do player (x, y)
-                _p_hit.hp.take_damage(x, y, _p_hit.x, _p_hit.y);
             }
         }
     }

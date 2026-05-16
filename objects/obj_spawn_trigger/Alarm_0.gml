@@ -2,17 +2,19 @@
 if (spawn_count > 0) {
     // Escolhe o tipo de caranguejo aleatoriamente (50% azul, 50% normal)
     var _tipo = choose(obj_enemy, obj_enemy_long);
-    // 2. Calcula posição aleatória próxima ao gatilho com verificação rigorosa
+    // 2. Calcula posição aleatória próxima aos barris no meio do mapa (Coordenadas fornecidas pelo usuário)
     var _tilemap = layer_tilemap_get_id(layer_get_id("Tiles_Wall"));
-    var _spawn_x = x;
-    var _spawn_y = y;
-    var _success = false;
+    
+    // Coordenada específica do meio da sala dos barris
+    var _spawn_x = 529;
+    var _spawn_y = 1422;
 
-    repeat(10) {
-        var _tx = x + irandom_range(-48, 48);
-        var _ty = y + irandom_range(-48, 48);
-        // Verifica se o ponto está livre de paredes
-        if (tilemap_get_at_pixel(_tilemap, _tx, _ty) == 0) {
+    var _success = false;
+    repeat(20) { // Aumentado para 20 tentativas para garantir um bom lugar
+        var _tx = _spawn_x + irandom_range(-64, 64);
+        var _ty = _spawn_y + irandom_range(-64, 64);
+        // Verifica se o ponto está livre de paredes e dentro dos limites da sala
+        if (tilemap_get_at_pixel(_tilemap, _tx, _ty) == 0 && _tx > 32 && _tx < room_width - 32 && _ty > 32 && _ty < room_height - 32) {
             _spawn_x = _tx;
             _spawn_y = _ty;
             _success = true;

@@ -1,3 +1,19 @@
+// --- 0. Configurações Globais (Garante Janela ao trocar de sala) ---
+if (current_room_track != room) {
+    // Se não estiver em tela cheia (ou se quisermos forçar a saída), garante o tamanho
+    if (window_get_fullscreen()) {
+        window_set_fullscreen(false);
+    }
+    window_set_size(1280, 720);
+    window_center();
+    current_room_track = room;
+}
+
+// Atalho manual para trocar entre janela e tela cheia (F4)
+if (keyboard_check_pressed(vk_f4)) {
+    window_set_fullscreen(!window_get_fullscreen());
+}
+
 // --- 0. Pausa ---
 if (keyboard_check_pressed(vk_escape)) {
     if (!instance_exists(obj_pause)) {
@@ -146,6 +162,20 @@ if (sprite_index != _prev_sprite) {
 // --- 11. Camera ---
 camera.update();
 
+// --- Animação Visual do Estilingue ---
+if (slingshot.is_charging) {
+    // Estica o elástico baseado no tempo de carga (até 12 pixels)
+    slingshot_visual_stretch = (slingshot.charge_time / slingshot.CHARGE_MAX) * 12;
+} else {
+    // Se soltou o tiro e tinha tensão, aplica recoil
+    if (slingshot_visual_stretch > 0) {
+        slingshot_recoil = slingshot_visual_stretch;
+        slingshot_visual_stretch = 0;
+    }
+    // Suaviza o recoil (o elástico voltando)
+    slingshot_recoil = lerp(slingshot_recoil, 0, 0.2);
+}
+
 // --- 1b. Interação / Diálogo ---
 dialogo.atualizar(); // Faz as letras aparecerem gradativamente [1]
 
@@ -168,8 +198,19 @@ else {
         var _alvo = instance_nearest(x, y, obj_interagivel);
         
         if (_alvo != noone && point_distance(x, y, _alvo.x, _alvo.y) < 80) {
-            npc_foco = _alvo; 
-            dialogo.iniciar(_alvo.falas);
+            // Se for uma porta (objetos que tem a variável target_room definida no Create)
+            if (variable_instance_exists(_alvo, "target_room")) {
+                // Só teleporta se não houver mais inimigos
+                if (instance_number(obj_enemy_parent) <= 0) {
+                    if (room_exists(_alvo.target_room)) {
+                        room_goto(_alvo.target_room);
+                    }
+                }
+            } else {
+                // Caso contrário, é um NPC normal: inicia diálogo
+                npc_foco = _alvo; 
+                dialogo.iniciar(_alvo.falas);
+            }
         }
     }
 }

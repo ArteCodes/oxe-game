@@ -11,6 +11,12 @@ function EnemyLongAiSystem(_move_spd, _shoot_delay, _spr_idle, _spr_walk) constr
 
     shoot_timer = 0;
     
+    // Variáveis de Estado
+    state      = "waiting"; // Estados: "waiting", "active"
+    timer      = 0;
+    wait_time  = 60; // 1 segundo de espera
+    aim_dir    = 0;
+    
     // Configurações de Range
     range_ideal  = 180; // Distância que ele tenta manter
     range_buffer = 40;  // Margem para não ficar "tremendo"
@@ -37,6 +43,20 @@ function EnemyLongAiSystem(_move_spd, _shoot_delay, _spr_idle, _spr_walk) constr
 
         var _dist = point_distance(_inst.x, _inst.y, _player.x, _player.y);
         var _dir  = point_direction(_inst.x, _inst.y, _player.x, _player.y);
+
+        // --- MÁQUINA DE ESTADOS SIMPLES ---
+        if (state == "waiting") {
+            _inst.sprite_index = spr_idle;
+            _inst.movement.vx = 0;
+            _inst.movement.vy = 0;
+            
+            timer++;
+            if (timer >= wait_time) {
+                state = "active";
+                timer = 0;
+            }
+            return; // Sai do update enquanto espera
+        }
 
         // --- 2. MOVIMENTAÇÃO (Manter distância direta) ---
         if (_dist > range_max) {
@@ -71,21 +91,22 @@ function EnemyLongAiSystem(_move_spd, _shoot_delay, _spr_idle, _spr_walk) constr
         shoot_timer++;
         
         // Mira (indicador visual de onde ele vai atirar)
-        // Mostra a mira quando estiver quase atirando (ex: últimos 45 frames)
         if (shoot_timer > shoot_delay - 45) {
-            var _target_dist = point_distance(_inst.x, _inst.y - 8, _player.x, _player.y - 12);
-            var _dir_aim = point_direction(_inst.x, _inst.y - 8, _player.x, _player.y - 12);
-            _inst.aim_x = _inst.x + lengthdir_x(_target_dist, _dir_aim);
-            _inst.aim_y = (_inst.y - 8) + lengthdir_y(_target_dist, _dir_aim);
+            // Atualiza a direção continuamente (seguindo o jogador)
+            aim_dir = point_direction(_inst.x, _inst.y - 8, _player.x, _player.y - 12);
+            
+            var _fixed_dist = 200; // Comprimento fixo da mira (igual ao normal)
+            _inst.aim_x = _inst.x + lengthdir_x(_fixed_dist, aim_dir);
+            _inst.aim_y = (_inst.y - 8) + lengthdir_y(_fixed_dist, aim_dir);
             _inst.draw_aim = true;
-            _inst.aim_color = c_white; // Voltando para branco/claro para ser mais discreto
+            _inst.aim_color = c_white; 
         } else {
             _inst.draw_aim = false;
         }
 
         if (shoot_timer >= shoot_delay) {
             shoot_timer = 0;
-            // Spawna a bolha com um pequeno offset para frente (evita colidir com parede onde o caranguejo está encostado)
+            // Recalcula a direção final para o tiro no momento do disparo
             var _b_dir = point_direction(_inst.x, _inst.y - 8, _player.x, _player.y - 12);
             var _bx = _inst.x + lengthdir_x(16, _b_dir);
             var _by = (_inst.y - 8) + lengthdir_y(16, _b_dir);
@@ -108,12 +129,5 @@ function EnemyLongAiSystem(_move_spd, _shoot_delay, _spr_idle, _spr_walk) constr
             }
         }
 
-        // --- 4. DANO AO TOCAR ---
-        with (_inst) {
-            var _p_hit = instance_place(x, y, obj_player);
-            if (_p_hit != noone) {
-                _p_hit.hp.take_damage(x, y, _p_hit.x, _p_hit.y);
-            }
-        }
     }
 }
