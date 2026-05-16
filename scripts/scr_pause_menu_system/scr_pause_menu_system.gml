@@ -5,7 +5,7 @@ function PauseMenuSystem(_font) constructor {
     state = "main"; 
     index = 0;
     
-    main_options = ["Retomar", "Sair"];
+    main_options = ["Retomar", "Ressurgir", "Sair"];
     confirm_options = ["Confirmar Sair?", "Sim", "Nao"];
 
     static update = function(_inst) {
@@ -24,19 +24,21 @@ function PauseMenuSystem(_font) constructor {
 
         if (keyboard_check_pressed(vk_enter)) {
             if (state == "main") {
-                if (index == 0) instance_destroy(_inst);
-                else { state = "confirm"; index = 1; }
+                switch (index) {
+                    case 0: instance_destroy(_inst); break;
+                    case 1: room_restart(); break;
+                    case 2: state = "confirm"; index = 1; break;
+                }
             } 
             else if (state == "confirm") {
                 if (index == 1) game_end(); 
-                else { state = "main"; index = 1; }
+                else { state = "main"; index = 2; }
             }
         }
     }
 
     /// @description Desenha o menu na camada GUI
     static draw = function() {
-        // Obtém o tamanho da camada GUI para centralizar
         var _gui_w = display_get_gui_width();
         var _gui_h = display_get_gui_height();
 
@@ -53,12 +55,8 @@ function PauseMenuSystem(_font) constructor {
 
         var _opts = (state == "main") ? main_options : confirm_options;
         for (var _i = 0; _i < array_length(_opts); _i++) {
-            var _is_title = (state == "confirm" && _i == 0);
-            var _color = (_i == index && !_is_title) ? c_yellow : c_white;
-            var _y_offset = (state == "confirm" && _i > 0) ? 20 : 0;
-            
-            // Desenha o texto centralizado na GUI
-            draw_text_transformed_colour(_gui_w / 2, (_gui_h / 2 - 40) + (_i * 40) + _y_offset, _opts[_i], 1, 1, 0, _color, _color, _color, _color, 1);
+            var _color = (_i == index) ? c_yellow : c_white;
+            draw_text_transformed_colour(_gui_w / 2, (_gui_h / 2 - 40) + (_i * 40), _opts[_i], 1, 1, 0, _color, _color, _color, _color, 1);
         }
-    }
+    };
 }

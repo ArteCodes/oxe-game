@@ -46,12 +46,12 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
         }
 
         // --- 2. MÁQUINA DE ESTADOS ---
+        var _is_attacking = (state == "charging" || state == "dashing");
+        
         switch (state) {
             case "follow":
-                // Segue o jogador usando vetores
+                // Segue o jogador diretamente (como antes)
                 var _dir = point_direction(_inst.x, _inst.y, _player.x, _player.y);
-                
-                // MUDANÇA AQUI: Injeta a velocidade no módulo de movimento em vez de alterar o X e Y diretamente!
                 _inst.movement.vx = lengthdir_x(follow_speed, _dir);
                 _inst.movement.vy = lengthdir_y(follow_speed, _dir);
                 
@@ -61,38 +61,48 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
 
                 // Timer para iniciar a investida
                 timer++;
-                if (timer >= 120) { // Inicia após 2 segundos (a 60fps)
+                if (timer >= 120) {
                     state = "charging";
                     timer = 0;
-                    dash_dir = _dir; // Trava a direção da investida
+                    dash_dir = _dir;
                 }
                 break;
 
             case "charging":
                 _inst.sprite_index = spr_idle;
-                
-                // MUDANÇA AQUI: Garante que o caranguejo zere a velocidade e pare de andar enquanto carrega o dash
                 _inst.movement.vx = 0;
                 _inst.movement.vy = 0;
-                
                 timer++;
-                if (timer >= 60) { // Carrega por 1 segundo
+                if (timer >= 60) {
                     state = "dashing";
                     timer = 0;
                 }
                 break;
 
             case "dashing":
-                // MUDANÇA AQUI: Injeta a super velocidade na direção travada
                 _inst.movement.vx = lengthdir_x(dash_speed, dash_dir);
                 _inst.movement.vy = lengthdir_y(dash_speed, dash_dir);
-                
                 timer++;
-                if (timer >= 25) { // Duração do dash
+                if (timer >= 25) {
                     state = "follow";
                     timer = 0;
                 }
                 break;
+        }
+
+        // --- SEPARAÇÃO (Só se não estiver atacando) ---
+        if (!_is_attacking) {
+            with (obj_enemy_parent) {
+                if (id != _inst) {
+                    var _sep_dist = point_distance(_inst.x, _inst.y, x, y);
+                    if (_sep_dist < 24) {
+                        var _pdir = point_direction(x, y, _inst.x, _inst.y);
+                        var _push = (24 - _sep_dist) * 0.1;
+                        _inst.movement.vx += lengthdir_x(_push, _pdir);
+                        _inst.movement.vy += lengthdir_y(_push, _pdir);
+                    }
+                }
+            }
         }
 
         // --- 3. DANO AO JOGADOR (Integração com HealthSystem) ---

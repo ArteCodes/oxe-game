@@ -39,26 +39,23 @@ if (distance_traveled >= max_distance) {
 }
 
 // Acerta inimigo — some em fumaca
-if (instance_exists(obj_enemy_test)) {
-    if (point_distance(x, y, obj_enemy_test.x, obj_enemy_test.y) < 16) {
+var _inst_enemy = instance_place(x, y, obj_enemy_parent);
 
-        // Cria fumaca
-        var _ps = part_system_create();
-        part_system_position(_ps, obj_enemy_test.x, obj_enemy_test.y);
-        var _pe = part_emitter_create(_ps);
-        part_emitter_burst(_ps, _pe, obj_enemy_test.part_type, 20);
+// Fallback: Se não detectou por máscara, tenta por distância curta
+if (_inst_enemy == noone) {
+    var _nearest = instance_nearest(x, y, obj_enemy_parent);
+    if (_nearest != noone && point_distance(x, y, _nearest.x, _nearest.y) < 24) _inst_enemy = _nearest;
+}
 
-        // Destroi o sistema de particulas apos 1 segundo
-        with (obj_enemy_test) {
-            alarm[0] = 60; // usa o alarm do inimigo para destruir o ps
-            part_system_ref = _ps;
-        }
-
-        // Destroi inimigo e recolhe a bolinha
-        with (obj_enemy_test) instance_destroy();
-        owner.ball.on_ball_collected();
-        instance_destroy();
-    }
+if (_inst_enemy != noone && (abs(vx) > 0.5 || abs(vy) > 0.5)) {
+    // Destroi inimigo
+    instance_destroy(_inst_enemy);
+    
+    // Para a bolinha no local (ela "fica lá" como pedido)
+    vx = 0;
+    vy = 0;
+    initial_speed = 0; // Para garantir que não se mova mais
+    distance_traveled = max_distance; // Força estado de parada
 }
 
 // Coleta automática ao jogador passar por cima (só após o delay)

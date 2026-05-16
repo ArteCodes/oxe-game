@@ -2,7 +2,7 @@
 draw_self(); 
 
 // 2. Verifica se o sistema modular está no estado de carregamento ("charging")
-if (enemy_ai.state == "charging") {
+if (enemy_ai != undefined && enemy_ai.state == "charging") {
     
     // Define a cor do rastro (ex: vermelho) e a transparência
     draw_set_colour(c_red); // [3]

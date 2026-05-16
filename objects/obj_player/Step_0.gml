@@ -30,7 +30,7 @@ var _can_shoot = dodge.can_act() && ball.can_fire();
 slingshot.update(mouse_check_button(mb_right), _can_shoot);
 
 // --- 4. Recarga da bolsa ---
-ball.update_reload(keyboard_check(ord("R")));
+ball.update_reload(mouse_check_button(mb_left));
 
 // --- 5. Velocidade maxima baseada no estado atual ---
 if (ball.is_reloading) {
@@ -98,7 +98,9 @@ if (hp.iframes > 0) {
 
 // Morte
 if (hp.dead) {
-    room_restart();
+    if (!instance_exists(obj_death_screen)) {
+        instance_create_layer(0, 0, "Instances", obj_death_screen);
+    }
 }
 
 // --- 9. Coleta da bolinha no chao ---
