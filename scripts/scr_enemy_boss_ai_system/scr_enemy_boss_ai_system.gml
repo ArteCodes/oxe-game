@@ -27,6 +27,7 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
     // Variáveis auxiliares de mira/consecução
     spike_x = 0;
     spike_y = 0;
+    spawn_done = false; // Permite spawnar 6 inimigos apenas uma vez ao chegar a 3 de HP
     
     // Função principal de atualização do Boss
     static update = function(_inst) {
@@ -89,7 +90,7 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                 _inst.movement.vx = lengthdir_x(follow_speed, _dir);
                 _inst.movement.vy = lengthdir_y(follow_speed, _dir);
                 _inst.sprite_index = spr_idle;
-                _inst.image_xscale = (_player.x < _inst.x) ? -1 : 1;
+                _inst.image_xscale = (_player.x < _inst.x) ? -1.8 : 1.8;
                 
                 // 2. Escolha e Gatilho de Ataques Especiais
                 if (attack_cooldown <= 0) {
@@ -100,10 +101,11 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                         _inst.movement.vx = 0;
                         _inst.movement.vy = 0;
                     } else {
-                        // Se o player estiver LONGE: escolhe entre dash, spike (e spawn na Fase 2)
+                        // Se o player estiver LONGE: escolhe entre dash e spike,
+                        // mas permite spawnar 6 inimigos apenas uma vez quando o boss estiver com 3 de vida.
                         var _attack_choice = "prepare_dash";
-                        if (_inst.hp <= 3) {
-                            _attack_choice = choose("prepare_dash", "prepare_spawn", "prepare_spike");
+                        if (_inst.hp == 3 && !spawn_done) {
+                            _attack_choice = "prepare_spawn";
                         } else {
                             _attack_choice = choose("prepare_dash", "prepare_spike");
                         }
@@ -131,7 +133,7 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                 _inst.sprite_index = spr_attack;
                 _inst.image_index = 0;
                 _inst.image_speed = 0.05; // Segura no primeiro frame com animação quase parada
-                _inst.image_xscale = (_player.x < _inst.x) ? -1 : 1;
+                _inst.image_xscale = (_player.x < _inst.x) ? -1.8 : 1.8;
                 
                 timer++;
                 if (timer >= 45) { // 0.75 segundo de aviso
@@ -169,7 +171,7 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
             #region ATAQUE 2: DASH GRANDE DE GROSSURA
             case "prepare_dash":
                 _inst.sprite_index = spr_idle;
-                _inst.image_xscale = (lengthdir_x(1, dash_dir) < 0) ? -1 : 1;
+                _inst.image_xscale = (lengthdir_x(1, dash_dir) < 0) ? -1.8 : 1.8;
                 
                 // Trava a mira na direção do player
                 dash_dir = point_direction(_inst.x, _inst.y, _player.x, _player.y);
@@ -265,6 +267,7 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                 state = "chase";
                 attack_cooldown = 240; // Spawns de caranguejos têm cooldown alto (4 segundos)
                 timer = 0;
+                spawn_done = true;
                 break;
             #endregion
 

@@ -16,6 +16,8 @@ collision_meia = new CollisionSystem("Tiles_Wall_md", 2);
 visible = true;
 image_alpha = 1;
 image_blend = c_white;
+image_xscale = 1.8;
+image_yscale = 1.8;
 depth = -50; // Garante que o boss seja desenhado acima do chão
 
 // 5. Atributos vitais exigidos

@@ -1,6 +1,12 @@
 porta_1_aberta = false; 
 window_set_fullscreen(false);
-window_set_size(1280, 720);
+if (variable_global_exists("player_window_width") && variable_global_exists("player_window_height")) {
+    window_set_size(global.player_window_width, global.player_window_height);
+} else {
+    window_set_size(1280, 720);
+    global.player_window_width = 1280;
+    global.player_window_height = 720;
+}
 movement  = new MovementSystem(10, 1, 0.18);   // velocidade, aceleração, fricção
 dodge     = new DodgeSystem(100, 20, 36);        // distância, duração, cooldown
 collision_cheia = new CollisionSystem("Tiles_Wall", 1);
@@ -27,8 +33,12 @@ camera.init();
 // HUB
 hud = new HudSystem(id, spr_heart_1, spr_heart_2, spr_heart_3);
 
-// Sincroniza o tamanho do GUI com o tamanho inicial da janela (1280x720)
-display_set_gui_size(1280, 720);
+// Sincroniza o tamanho do GUI com o tamanho inicial da janela
+if (variable_global_exists("player_window_width") && variable_global_exists("player_window_height")) {
+    display_set_gui_size(global.player_window_width, global.player_window_height);
+} else {
+    display_set_gui_size(1280, 720);
+}
 
 // --- Inicialização dos Sistemas ---
 // (seus outros sistemas estarão aqui em cima)

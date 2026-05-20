@@ -4,7 +4,13 @@ if (current_room_track != room) {
     if (window_get_fullscreen()) {
         window_set_fullscreen(false);
     }
-    window_set_size(1280, 720);
+    if (variable_global_exists("player_window_width") && variable_global_exists("player_window_height")) {
+        window_set_size(global.player_window_width, global.player_window_height);
+    } else {
+        window_set_size(1280, 720);
+        global.player_window_width = 1280;
+        global.player_window_height = 720;
+    }
     window_center();
     current_room_track = room;
 }
@@ -19,6 +25,9 @@ if (window_get_width() > 0 && window_get_height() > 0) {
         surface_resize(application_surface, _ww, _wh);
         view_set_wport(0, _ww);
         view_set_hport(0, _wh);
+        
+        global.player_window_width = _ww;
+        global.player_window_height = _wh;
     }
 }
 
