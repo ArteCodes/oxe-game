@@ -11,8 +11,8 @@ draw_self();
 // 2. Verifica se o sistema modular está no estado de carregamento ("charging")
 if (enemy_ai != undefined && enemy_ai.state == "charging") {
     
-    // Define a cor do rastro (vermelha) e a transparência
-    draw_set_colour(c_red); 
+    // Define a cor do rastro (laranja) e a transparência
+    draw_set_colour(c_orange); 
     draw_set_alpha(0.2);
 
     // Calcula a posição final da linha baseada na direção travada da investida

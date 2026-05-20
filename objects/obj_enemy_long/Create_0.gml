@@ -1,4 +1,4 @@
-// --- Evento Criar (Create) do obj_enemy_long ---
+ // --- Evento Criar (Create) do obj_enemy_long ---
 
 // 1. Inicializa a IA Long (Krab Blue)
 // (Velocidade: 1.5, Delay de tiro: 180 frames = 3 segundos)

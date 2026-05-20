@@ -36,8 +36,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name": "spr_crab_blue_idle",
-    "path": "sprites/spr_crab_blue_idle/spr_crab_blue_idle.yy"
+    "name":"spr_crab_blue_idle",
+    "path":"sprites/spr_crab_blue_idle/spr_crab_blue_idle.yy",
   },
   "spriteMaskId":null,
   "visible":true,

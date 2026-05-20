@@ -1,4 +1,4 @@
-// --- Evento Criar (Create) ---
+ // --- Evento Criar (Create) ---
 sprite_index = spr_crab_death;
 image_index = 0;
 image_speed = 0.25; // Velocidade suave da animação de morte
