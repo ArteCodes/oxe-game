@@ -16,6 +16,7 @@
     {"name":"inst_3BF21657","path":"rooms/rm_main_maps/rm_main_maps.yy",},
     {"name":"inst_3F8633D0","path":"rooms/rm_main_maps/rm_main_maps.yy",},
     {"name":"inst_76A335A0","path":"rooms/rm_main_maps/rm_main_maps.yy",},
+    {"name":"inst_75B07E33","path":"rooms/rm_main_maps/rm_main_maps.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -29,6 +30,7 @@
         {"$GMRInstance":"v4","%Name":"inst_3BF21657","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_3BF21657","objectId":{"name":"obj_enemy_long","path":"objects/obj_enemy_long/obj_enemy_long.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":2112.0,"y":1376.0,},
         {"$GMRInstance":"v4","%Name":"inst_3F8633D0","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_3F8633D0","objectId":{"name":"obj_enemy_long","path":"objects/obj_enemy_long/obj_enemy_long.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":2112.0,"y":1408.0,},
         {"$GMRInstance":"v4","%Name":"inst_76A335A0","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_76A335A0","objectId":{"name":"obj_boss","path":"objects/obj_boss/obj_boss.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":3552.0,"y":672.0,},
+        {"$GMRInstance":"v4","%Name":"inst_75B07E33","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_75B07E33","objectId":{"name":"obj_dark_reveal","path":"objects/obj_dark_reveal/obj_dark_reveal.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":2956.0,"y":774.0,},
       ],"layers":[],"name":"Instances_2","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRTileLayer":"","%Name":"Tiles_Wall_md","depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Tiles_Wall_md","properties":[],"resourceType":"GMRTileLayer","resourceVersion":"2.0","tiles":{"SerialiseHeight":63,"SerialiseWidth":157,"TileCompressedData":[
           -2713,-2147483648,1,0,-155,-2147483648,2,0,5,-155,-2147483648,1,5,-155,-2147483648,2,0,5,-155,-2147483648,

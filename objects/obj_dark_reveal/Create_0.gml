@@ -1,4 +1,4 @@
-// --- Evento Criar (Create) do obj_dark_reveal ---
+ // --- Evento Criar (Create) do obj_dark_reveal ---
 // Sistema de escuridão por ÁREAS: tudo começa preto.
 // Quando o jogador entra numa área do mapa, a área inteira se revela de uma vez.
 
@@ -25,6 +25,9 @@ areas_cols = ceil(room_width / area_w);
 areas_rows = ceil(room_height / area_h);
 area_visited = ds_grid_create(areas_cols, areas_rows);
 ds_grid_clear(area_visited, 0);
+
+// Raio de luz ao redor do jogador (efeito lanterna no Draw)
+reveal_radius = 200;
 
 // Superfície de renderização da máscara de escuridão
 surf_dark = -1;
