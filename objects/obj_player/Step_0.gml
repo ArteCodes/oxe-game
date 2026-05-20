@@ -205,20 +205,18 @@ if (dodge.is_dodging) {
 if (sprite_index != _prev_sprite) {
     image_index = 0;
 }
-// --- 11. Câmera e FOV (Field of View / Zoom Dinâmico) ---
-// Atalhos manuais (Teclas 1, 2, 3) para o jogador ajustar o FOV base a qualquer momento:
-if (keyboard_check_pressed(ord("1"))) base_fov = 1.0;  // Zoom Padrão
-if (keyboard_check_pressed(ord("2"))) base_fov = 1.25; // Zoom Médio
-if (keyboard_check_pressed(ord("3"))) base_fov = 1.5;  // Zoom Amplo/Tático
-
-// Afasta o FOV em 20% suavemente se o jogador estiver carregando estilingue para mirar melhor!
-if (slingshot.is_charging) {
-    camera.target_fov = base_fov * 1.2;
-} else {
-    camera.target_fov = base_fov;
-}
-
+// --- 11. Camera ---
 camera.update();
+
+// --- 12. DEBUG/INTERATIVE: Atalho para ligar/desligar o Fog (Tecla 'F') ---
+if (keyboard_check_pressed(ord("F"))) {
+    if (instance_exists(obj_fog)) {
+        instance_destroy(obj_fog);
+        effect_create_above(ef_smoke, x, y, 1, c_white);
+    } else {
+        instance_create_layer(x, y, "Instances", obj_fog);
+    }
+}
 
 // --- Animação Visual do Estilingue ---
 if (slingshot.is_charging) {

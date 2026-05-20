@@ -20,10 +20,9 @@ aim = new AimSystem("Tiles_Wall");
 // Garante que o player é desenhado acima dos tiles
 depth = -100;
 
-// Camera e FOV (Field of View)
+// Camera
 camera = new CameraSystem(1100, 600, id);
 camera.init();
-base_fov = 1.0; // Escala inicial de FOV/Zoom
 
 // HUB
 hud = new HudSystem(id, spr_heart_1, spr_heart_2, spr_heart_3);
@@ -43,3 +42,8 @@ dialogo = new DialogSystem();
 slingshot_visual_stretch = 0;
 slingshot_recoil = 0;
 current_room_track = -1;
+
+// --- Inicializa a Névoa Atmosférica (Fog) na fase ---
+if (!instance_exists(obj_fog)) {
+    instance_create_layer(x, y, "Instances", obj_fog);
+}
