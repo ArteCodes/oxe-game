@@ -18,10 +18,10 @@ if (!surface_exists(surf_fog)) {
 if (surface_exists(surf_fog)) {
     surface_set_target(surf_fog);
     
-    // Limpa com um azul-marinho profundo quase preto de altíssima opacidade (0.97)
-    // Isso esconde o mapa inteiro, mas deixa leves silhuetas imperceptíveis de mistério
+    // Limpa com um azul-marinho profundo translúcido (40% de opacidade)
+    // O jogador consegue ver parcialmente além do seu campo de visão
     var _deep_dark_color = make_color_rgb(5, 7, 14);
-    draw_clear_alpha(_deep_dark_color, 0.98);
+    draw_clear_alpha(_deep_dark_color, 0.40);
     
     // Recorta o campo de visão do jogador usando Blend Mode Subtract
     gpu_set_blendmode(bm_subtract);

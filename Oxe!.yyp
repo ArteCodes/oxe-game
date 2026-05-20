@@ -881,6 +881,12 @@
         "name": "obj_fog",
         "path": "objects/obj_fog/obj_fog.yy"
       }
+    },
+    {
+      "id": {
+        "name": "obj_dark_reveal",
+        "path": "objects/obj_dark_reveal/obj_dark_reveal.yy"
+      }
     }
   ],
   "resourceType": "GMProject",
