@@ -25,7 +25,7 @@ for (var i = 0; i < 8; i++) {
 
 // 3. Efeitos residuais de impacto de choque térmico e fumaça pesada subindo
 effect_create_above(ef_ring, x, y, 1, c_orange);
-effect_create_above(ef_smokeup, x, y, 2, c_dimgray);
+effect_create_above(ef_smokeup, x, y, 2, make_color_rgb(105, 105, 105));
 
 // 4. Criação opcional da animação de desintegração padrão como base
 if (sprite_exists(spr_crab_death)) {
