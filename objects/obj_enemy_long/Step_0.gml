@@ -16,7 +16,9 @@ movement.apply_friction();
 
 // 4. Resolve Colisões com o cenário
 movement.vx = collision.resolve_x(x, y, movement.vx);
+movement.vx = collision_meia.resolve_x(x, y, movement.vx);
 movement.vy = collision.resolve_y(x, y, movement.vy);
+movement.vy = collision_meia.resolve_y(x, y, movement.vy);
 
 // 5. Aplica posição final
 x += movement.vx;

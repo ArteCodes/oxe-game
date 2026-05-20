@@ -10,6 +10,7 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
     spr_idle        = _spr_idle;
     spr_walk        = _spr_walk;
     trail_thickness = 4; // Grossura do rastro visual
+    vision_range    = 320; // Campo de visão (distância máxima para perseguir/atacar)
 
     // Variáveis de Estado Internas
     state    = "waiting"; // Estados: "waiting", "follow", "charging", "dashing", "melee"
@@ -76,14 +77,23 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
                 _inst.movement.vx = 0;
                 _inst.movement.vy = 0;
                 
-                timer++;
-                if (timer >= wait_time) {
+                var _dist_wait = point_distance(_inst.x, _inst.y, _player.x, _player.y);
+                if (_dist_wait <= vision_range) {
                     state = "follow";
                     timer = 0;
                 }
                 break;
 
             case "follow":
+                var _dist = point_distance(_inst.x, _inst.y, _player.x, _player.y);
+                
+                // Se o player estiver fora do campo de visão, volta a ficar imóvel em waiting
+                if (_dist > vision_range) {
+                    state = "waiting";
+                    timer = 0;
+                    break;
+                }
+
                 // Segue o jogador diretamente (como antes)
                 var _dir = point_direction(_inst.x, _inst.y, _player.x, _player.y);
                 _inst.movement.vx = lengthdir_x(follow_speed, _dir);
@@ -199,8 +209,8 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
                 break;
         }
 
-        // --- SEPARAÇÃO (Só se não estiver atacando) ---
-        if (!_is_attacking) {
+        // --- SEPARAÇÃO (Só se não estiver atacando e já tiver acordado) ---
+        if (!_is_attacking && state != "waiting") {
             with (obj_enemy_parent) {
                 if (id != _inst) {
                     var _sep_dist = point_distance(_inst.x, _inst.y, x, y);

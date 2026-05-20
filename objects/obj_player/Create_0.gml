@@ -20,9 +20,10 @@ aim = new AimSystem("Tiles_Wall");
 // Garante que o player é desenhado acima dos tiles
 depth = -100;
 
-// Camera
+// Camera e FOV (Field of View)
 camera = new CameraSystem(1100, 600, id);
 camera.init();
+base_fov = 1.0; // Escala inicial de FOV/Zoom
 
 // HUB
 hud = new HudSystem(id, spr_heart_1, spr_heart_2, spr_heart_3);

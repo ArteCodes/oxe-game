@@ -14,6 +14,25 @@ if (keyboard_check_pressed(vk_f4)) {
     window_set_fullscreen(!window_get_fullscreen());
 }
 
+// --- DEBUG: Atalho para Spawnar o Boss Caranguejo (Tecla 'B') ---
+if (keyboard_check_pressed(ord("B"))) {
+    var _bx = x + 120;
+    var _by = y;
+    
+    // Verifica se a parede obstrui, se sim spawna no pé do jogador
+    var _tilemap = layer_tilemap_get_id(layer_get_id("Tiles_Wall"));
+    if (tilemap_get_at_pixel(_tilemap, _bx, _by) != 0) {
+        _bx = x;
+        _by = y - 96;
+    }
+    
+    instance_create_layer(_bx, _by, "Instances", obj_boss);
+    
+    // Efeito premium no spawn
+    effect_create_above(ef_ring, _bx, _by, 2, c_red);
+    effect_create_above(ef_firework, _bx, _by, 2, c_red);
+}
+
 // --- 0. Pausa ---
 if (keyboard_check_pressed(vk_escape)) {
     if (!instance_exists(obj_pause)) {
@@ -186,7 +205,19 @@ if (dodge.is_dodging) {
 if (sprite_index != _prev_sprite) {
     image_index = 0;
 }
-// --- 11. Camera ---
+// --- 11. Câmera e FOV (Field of View / Zoom Dinâmico) ---
+// Atalhos manuais (Teclas 1, 2, 3) para o jogador ajustar o FOV base a qualquer momento:
+if (keyboard_check_pressed(ord("1"))) base_fov = 1.0;  // Zoom Padrão
+if (keyboard_check_pressed(ord("2"))) base_fov = 1.25; // Zoom Médio
+if (keyboard_check_pressed(ord("3"))) base_fov = 1.5;  // Zoom Amplo/Tático
+
+// Afasta o FOV em 20% suavemente se o jogador estiver carregando estilingue para mirar melhor!
+if (slingshot.is_charging) {
+    camera.target_fov = base_fov * 1.2;
+} else {
+    camera.target_fov = base_fov;
+}
+
 camera.update();
 
 // --- Animação Visual do Estilingue ---

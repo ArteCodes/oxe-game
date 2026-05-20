@@ -10,6 +10,7 @@ function EnemyLongAiSystem(_move_spd, _shoot_delay, _spr_idle, _spr_walk) constr
     spr_walk    = _spr_walk;
 
     shoot_timer = 0;
+    vision_range = 400; // Maior campo de visão de todos
     
     // Variáveis de Estado
     state      = "waiting"; // Estados: "waiting", "active"
@@ -63,12 +64,23 @@ function EnemyLongAiSystem(_move_spd, _shoot_delay, _spr_idle, _spr_walk) constr
             _inst.movement.vx = 0;
             _inst.movement.vy = 0;
             
-            timer++;
-            if (timer >= wait_time) {
+            var _dist_wait = point_distance(_inst.x, _inst.y, _player.x, _player.y);
+            if (_dist_wait <= vision_range) {
                 state = "active";
                 timer = 0;
             }
             return; // Sai do update enquanto espera
+        }
+
+        // Se o player estiver fora do campo de visão, volta para waiting
+        if (_dist > vision_range) {
+            state = "waiting";
+            shoot_timer = 0;
+            _inst.draw_aim = false;
+            _inst.movement.vx = 0;
+            _inst.movement.vy = 0;
+            _inst.sprite_index = spr_idle;
+            return;
         }
 
         // --- 2. MOVIMENTAÇÃO (Manter distância direta) ---
@@ -129,15 +141,17 @@ function EnemyLongAiSystem(_move_spd, _shoot_delay, _spr_idle, _spr_walk) constr
             _bubble.vy = lengthdir_y(4, _b_dir);
         }
 
-        // --- SEPARAÇÃO (Evita amontoar) ---
-        with (obj_enemy_parent) {
-            if (id != _inst) {
-                var _sep_dist = point_distance(_inst.x, _inst.y, x, y);
-                if (_sep_dist < 28) {
-                    var _pdir = point_direction(x, y, _inst.x, _inst.y);
-                    var _push = (28 - _sep_dist) * 0.15; // Empurrão proporcional
-                    _inst.movement.vx += lengthdir_x(_push, _pdir);
-                    _inst.movement.vy += lengthdir_y(_push, _pdir);
+        // --- SEPARAÇÃO (Evita amontoar - Só ativa se estiver acordado) ---
+        if (state != "waiting") {
+            with (obj_enemy_parent) {
+                if (id != _inst) {
+                    var _sep_dist = point_distance(_inst.x, _inst.y, x, y);
+                    if (_sep_dist < 28) {
+                        var _pdir = point_direction(x, y, _inst.x, _inst.y);
+                        var _push = (28 - _sep_dist) * 0.15; // Empurrão proporcional
+                        _inst.movement.vx += lengthdir_x(_push, _pdir);
+                        _inst.movement.vy += lengthdir_y(_push, _pdir);
+                    }
                 }
             }
         }

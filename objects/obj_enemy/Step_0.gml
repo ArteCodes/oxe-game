@@ -13,7 +13,9 @@ enemy_ai.update(self);
 
 // 3. O módulo de Colisão intercepta o movimento antes que o caranguejo ande
 movement.vx = collision.resolve_x(x, y, movement.vx);
+movement.vx = collision_meia.resolve_x(x, y, movement.vx);
 movement.vy = collision.resolve_y(x, y, movement.vy);
+movement.vy = collision_meia.resolve_y(x, y, movement.vy);
 
 // 4. Aplica o Atrito para suavizar paradas
 movement.apply_friction();

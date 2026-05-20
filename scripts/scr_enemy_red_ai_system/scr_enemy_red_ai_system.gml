@@ -11,6 +11,7 @@ function EnemyRedAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk, _spr_att
     spr_idle        = _spr_idle;
     spr_walk        = _spr_walk;
     spr_attack      = _spr_attack;
+    vision_range    = 320; // Campo de visão (distância máxima para perseguir/atacar)
 
     // Variáveis de Estado Internas
     state    = "waiting"; // Estados: "waiting", "follow", "charging", "dashing", "exploding"
@@ -61,21 +62,30 @@ function EnemyRedAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk, _spr_att
                 _inst.sprite_index = spr_idle;
                 _inst.movement.vx = 0;
                 _inst.movement.vy = 0;
-                timer++;
-                if (timer >= wait_time) {
+                
+                var _dist_wait = point_distance(_inst.x, _inst.y, _player.x, _player.y);
+                if (_dist_wait <= vision_range) {
                     state = "follow";
                     timer = 0;
                 }
                 break;
 
             case "follow":
+                var _dist = point_distance(_inst.x, _inst.y, _player.x, _player.y);
+                
+                // Se o player estiver fora do campo de visão, volta a ficar imóvel em waiting
+                if (_dist > vision_range) {
+                    state = "waiting";
+                    timer = 0;
+                    break;
+                }
+
                 var _dir = point_direction(_inst.x, _inst.y, _player.x, _player.y);
                 _inst.movement.vx = lengthdir_x(follow_speed, _dir);
                 _inst.movement.vy = lengthdir_y(follow_speed, _dir);
                 _inst.sprite_index = spr_walk;
                 _inst.image_xscale = (_player.x < _inst.x) ? -1 : 1;
 
-                var _dist = point_distance(_inst.x, _inst.y, _player.x, _player.y);
                 if (_dist < explosion_trigger_range) {
                     state = "exploding";
                     timer = 0;
@@ -163,6 +173,21 @@ function EnemyRedAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk, _spr_att
                     return;
                 }
                 break;
+        }
+
+        // --- SEPARAÇÃO (Só se não estiver explodindo e estiver acordado) ---
+        if (state != "exploding" && state != "waiting") {
+            with (obj_enemy_parent) {
+                if (id != _inst) {
+                    var _sep_dist = point_distance(_inst.x, _inst.y, x, y);
+                    if (_sep_dist < 24) {
+                        var _pdir = point_direction(x, y, _inst.x, _inst.y);
+                        var _push = (24 - _sep_dist) * 0.1;
+                        _inst.movement.vx += lengthdir_x(_push, _pdir);
+                        _inst.movement.vy += lengthdir_y(_push, _pdir);
+                    }
+                }
+            }
         }
     }
 }

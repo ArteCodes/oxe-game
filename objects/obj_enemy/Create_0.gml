@@ -10,6 +10,7 @@ movement = new MovementSystem(3, 0.5, 0.2);
 
 // 3. Inicializa o sistema de colisão informando o nome da camada de tiles
 collision = new CollisionSystem("Tiles_Wall", 1);
+collision_meia = new CollisionSystem("Tiles_Wall_md", 2);
 
 // 4. Garantia de Visibilidade
 visible = true;

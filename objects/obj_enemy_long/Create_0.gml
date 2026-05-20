@@ -9,6 +9,7 @@ movement = new MovementSystem(2, 0.4, 0.2);
 
 // 3. Sistema de Colisão
 collision = new CollisionSystem("Tiles_Wall", 1);
+collision_meia = new CollisionSystem("Tiles_Wall_md", 2);
 
 // 4. Garantia de Visibilidade
 visible = true;
