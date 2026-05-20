@@ -9,28 +9,22 @@ if (current_room_track != room) {
     current_room_track = room;
 }
 
+// Sincroniza dinamicamente o tamanho do GUI e a viewport da câmera com a janela do jogo caso o usuário a redimensione
+if (window_get_width() > 0 && window_get_height() > 0) {
+    if (display_get_gui_width() != window_get_width() || display_get_gui_height() != window_get_height()) {
+        var _ww = window_get_width();
+        var _wh = window_get_height();
+        display_set_gui_size(_ww, _wh);
+        
+        surface_resize(application_surface, _ww, _wh);
+        view_set_wport(0, _ww);
+        view_set_hport(0, _wh);
+    }
+}
+
 // Atalho manual para trocar entre janela e tela cheia (F4)
 if (keyboard_check_pressed(vk_f4)) {
     window_set_fullscreen(!window_get_fullscreen());
-}
-
-// --- DEBUG: Atalho para Spawnar o Boss Caranguejo (Tecla 'B') ---
-if (keyboard_check_pressed(ord("B"))) {
-    var _bx = x + 120;
-    var _by = y;
-    
-    // Verifica se a parede obstrui, se sim spawna no pé do jogador
-    var _tilemap = layer_tilemap_get_id(layer_get_id("Tiles_Wall"));
-    if (tilemap_get_at_pixel(_tilemap, _bx, _by) != 0) {
-        _bx = x;
-        _by = y - 96;
-    }
-    
-    instance_create_layer(_bx, _by, "Instances", obj_boss);
-    
-    // Efeito premium no spawn
-    effect_create_above(ef_ring, _bx, _by, 2, c_red);
-    effect_create_above(ef_firework, _bx, _by, 2, c_red);
 }
 
 // --- 0. Pausa ---

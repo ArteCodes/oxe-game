@@ -1,7 +1,7 @@
 // --- Evento Criar (Create) do obj_fog ---
 
 // 1. Configurações visuais e profundidade
-depth = -90; // Desenha por cima do player e inimigos, mas sob o HUD
+depth = -120; // Desenha por cima de tudo na fase (player, inimigos, paredes), mas sob o HUD/GUI
 
 // 2. GERAÇÃO PROCEDURAL DO SPRITE DE NÚVEM DE NÉVOA
 // Para evitar carregar arquivos externos, geramos uma textura de nuvem suave e realista
@@ -43,3 +43,6 @@ for (var j = 0; j < _num_clouds; j++) {
         pulse_offset: random(100)
     });
 }
+
+// Inicializa a superfície do Fog de Guerra (Máscara de Escuridão)
+surf_fog = -1;

@@ -15,11 +15,10 @@ function CameraSystem(_width, _height, _target) constructor {
         view_enabled    = true;
         view_visible[0] = true;
         camera_set_view_size(view_camera[0], view_w, view_h);
-        window_set_fullscreen(true);
 
-        // Resolve a resolucao da janela
-        var _w = display_get_width();
-        var _h = display_get_height();
+        // Resolve a resolucao com base na janela atual (ou fallback de 1280x720)
+        var _w = (window_get_width() > 0) ? window_get_width() : 1280;
+        var _h = (window_get_height() > 0) ? window_get_height() : 720;
         surface_resize(application_surface, _w, _h);
         view_set_wport(0, _w);
         view_set_hport(0, _h);

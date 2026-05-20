@@ -27,10 +27,8 @@ camera.init();
 // HUB
 hud = new HudSystem(id, spr_heart_1, spr_heart_2, spr_heart_3);
 
-// Sincroniza o tamanho do GUI com a janela
-var _w = display_get_width();
-var _h = display_get_height();
-display_set_gui_size(_w, _h);
+// Sincroniza o tamanho do GUI com o tamanho inicial da janela (1280x720)
+display_set_gui_size(1280, 720);
 
 // --- Inicialização dos Sistemas ---
 // (seus outros sistemas estarão aqui em cima)
