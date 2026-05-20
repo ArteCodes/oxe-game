@@ -11,9 +11,9 @@ draw_self();
 // 2. Verifica se o sistema modular está no estado de carregamento ("charging")
 if (enemy_ai != undefined && enemy_ai.state == "charging") {
     
-    // Define a cor do rastro (ex: vermelho) e a transparência
+    // Define a cor do rastro (vermelha) e a transparência
     draw_set_colour(c_red); 
-    draw_set_alpha(0.3);
+    draw_set_alpha(0.2);
 
     // Calcula a posição final da linha baseada na direção travada da investida
     // Usamos o dash_dir que foi salvo na struct quando o ataque começou

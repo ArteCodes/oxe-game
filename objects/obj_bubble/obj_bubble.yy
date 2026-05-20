@@ -33,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_ball",
-    "path":"sprites/spr_ball/spr_ball.yy",
+    "name":"spr_bubble_blue",
+    "path":"sprites/spr_bubble_blue/spr_bubble_blue.yy",
   },
   "spriteMaskId":null,
   "visible":true,

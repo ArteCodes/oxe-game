@@ -44,8 +44,21 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
                 
                 // VERIFICAÇÃO DE IMPACTO USANDO AS VARIÁVEIS DIRETAS DA BOLA
                 if (abs(_ball.vx) > 0.5 || abs(_ball.vy) > 0.5) {
-                    instance_destroy(); 
-                    return; // Interrompe a execução modular
+                    var _has_cooldown = variable_instance_exists(self, "hit_cooldown");
+                    var _can_damage = !_has_cooldown || (hit_cooldown <= 0);
+                    
+                    if (_can_damage) {
+                        if (!variable_instance_exists(self, "hp")) {
+                            hp = 1;
+                        }
+                        hp -= 1;
+                        hit_cooldown = 20; // 20 frames de imunidade (0.33 segundos)
+                        
+                        if (hp <= 0) {
+                            instance_destroy(); 
+                            return; // Interrompe a execução modular
+                        }
+                    }
                 }
                 
             }
@@ -103,7 +116,13 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
                 // Fica parado durante o ataque
                 _inst.movement.vx = 0;
                 _inst.movement.vy = 0;
-                _inst.sprite_index = spr_idle;
+                if (sprite_exists(spr_crab_attack)) {
+                    _inst.sprite_index = spr_crab_attack;
+                    _inst.image_speed = 0.25; // Velocidade da garra atacando
+                } else {
+                    _inst.sprite_index = spr_idle;
+                }
+                _inst.image_xscale = (_player.x < _inst.x) ? -1 : 1;
                 
                 timer++;
                 
@@ -129,12 +148,19 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
                 // 3. Fim do Estado (Recuperação)
                 if (timer >= 50) {
                     state = "follow";
+                    _inst.image_speed = 1.0; // Restaura velocidade de animação padrão
                     timer = 0;
                 }
                 break;
 
             case "charging":
-                _inst.sprite_index = spr_idle;
+                if (sprite_exists(spr_crab_attack)) {
+                    _inst.sprite_index = spr_crab_attack;
+                    _inst.image_speed = 0.15; // Prepara o ataque de forma lenta
+                } else {
+                    _inst.sprite_index = spr_idle;
+                }
+                _inst.image_xscale = (_player.x < _inst.x) ? -1 : 1;
                 _inst.movement.vx = 0;
                 _inst.movement.vy = 0;
                 timer++;
@@ -145,6 +171,11 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
                 break;
 
             case "dashing":
+                if (sprite_exists(spr_crab_attack)) {
+                    _inst.sprite_index = spr_crab_attack;
+                    _inst.image_speed = 0.45; // Animação rápida de avanço
+                }
+                _inst.image_xscale = (lengthdir_x(1, dash_dir) < 0) ? -1 : 1;
                 _inst.movement.vx = lengthdir_x(dash_speed, dash_dir);
                 _inst.movement.vy = lengthdir_y(dash_speed, dash_dir);
                 
@@ -154,6 +185,7 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
                     if (_p_hit != noone) {
                         _p_hit.hp.take_damage(x, y, _p_hit.x, _p_hit.y);
                         other.state = "follow";
+                        _inst.image_speed = 1.0; // Restaura velocidade de animação padrão
                         other.timer = 0;
                     }
                 }
@@ -161,6 +193,7 @@ function EnemyAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_walk) constructor
                 timer++;
                 if (timer >= 25) {
                     state = "follow";
+                    _inst.image_speed = 1.0; // Restaura velocidade de animação padrão
                     timer = 0;
                 }
                 break;

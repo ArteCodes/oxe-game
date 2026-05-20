@@ -14,9 +14,9 @@ for (var i = 0; i < ds_list_size(trail_list); i++) {
 draw_set_alpha(1);
 draw_set_color(c_white);
 
-// 2. Desenha a bolha principal (Usando spr_ball como placeholder)
-if (sprite_exists(spr_ball)) {
-    draw_sprite_ext(spr_ball, 0, x, y, 0.6, 0.6, 0, c_aqua, 1);
+// 2. Desenha a bolha principal (Animada, usando o novo sprite)
+if (sprite_exists(sprite_index)) {
+    draw_sprite_ext(sprite_index, image_index, x, y, 1.0, 1.0, 0, c_white, 1);
 } else {
     draw_circle_color(x, y, 6, c_aqua, c_blue, false);
 }

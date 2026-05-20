@@ -20,3 +20,7 @@ depth = -50;
 draw_aim = false;
 aim_x = 0;
 aim_y = 0;
+
+// 6. Sistema de Vida e Cooldown de Hit
+hp = 1; // O caranguejo azul (long-range) morre com 1 tiro
+hit_cooldown = 0;

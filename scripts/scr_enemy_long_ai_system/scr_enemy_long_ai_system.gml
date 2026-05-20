@@ -36,8 +36,21 @@ function EnemyLongAiSystem(_move_spd, _shoot_delay, _spr_idle, _spr_walk) constr
         with (_inst) {
             var _ball = instance_place(x, y, obj_ball);
             if (_ball != noone && (abs(_ball.vx) > 0.5 || abs(_ball.vy) > 0.5)) {
-                instance_destroy(); 
-                return;
+                var _has_cooldown = variable_instance_exists(self, "hit_cooldown");
+                var _can_damage = !_has_cooldown || (hit_cooldown <= 0);
+                
+                if (_can_damage) {
+                    if (!variable_instance_exists(self, "hp")) {
+                        hp = 1;
+                    }
+                    hp -= 1;
+                    hit_cooldown = 20; // 20 frames de imunidade (0.33 segundos)
+                    
+                    if (hp <= 0) {
+                        instance_destroy(); 
+                        return;
+                    }
+                }
             }
         }
 

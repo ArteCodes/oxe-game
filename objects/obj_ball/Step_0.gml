@@ -48,24 +48,36 @@ if (_inst_enemy == noone) {
 }
 
 if (_inst_enemy != noone && (abs(vx) > 0.5 || abs(vy) > 0.5)) {
-    // Destroi inimigo
-    instance_destroy(_inst_enemy);
+    var _has_cooldown = variable_instance_exists(_inst_enemy, "hit_cooldown");
+    var _can_damage = !_has_cooldown || (_inst_enemy.hit_cooldown <= 0);
     
-    // --- NOVO: Sistema de Ricochete ---
-    // Inverte a direção e adiciona um desvio aleatório (20 graus)
-    var _dir_atual = point_direction(0, 0, vx, vy);
-    var _nova_dir  = (_dir_atual + 180) + irandom_range(-20, 20);
-    
-    // Mantém a velocidade mas reduz um pouco (impacto)
-    var _nova_spd = initial_speed * 0.7; // Perde 30% da força original no impacto
-    initial_speed = _nova_spd;
-    
-    vx = lengthdir_x(_nova_spd, _nova_dir);
-    vy = lengthdir_y(_nova_spd, _nova_dir);
-    
-    // "Dá mais vida" para a bolinha continuar voando após o ricochete
-    // Reduzimos a distância percorrida para que ela tenha fôlego para o rebote
-    distance_traveled = max(0, distance_traveled - (max_distance * 0.3));
+    if (_can_damage) {
+        if (!variable_instance_exists(_inst_enemy, "hp")) {
+            _inst_enemy.hp = 1;
+        }
+        _inst_enemy.hp -= 1;
+        _inst_enemy.hit_cooldown = 20; // 20 frames de imunidade (0.33 segundos)
+        
+        if (_inst_enemy.hp <= 0) {
+            instance_destroy(_inst_enemy);
+        }
+        
+        // --- NOVO: Sistema de Ricochete ---
+        // Inverte a direção e adiciona um desvio aleatório (20 graus)
+        var _dir_atual = point_direction(0, 0, vx, vy);
+        var _nova_dir  = (_dir_atual + 180) + irandom_range(-20, 20);
+        
+        // Mantém a velocidade mas reduz um pouco (impacto)
+        var _nova_spd = initial_speed * 0.7; // Perde 30% da força original no impacto
+        initial_speed = _nova_spd;
+        
+        vx = lengthdir_x(_nova_spd, _nova_dir);
+        vy = lengthdir_y(_nova_spd, _nova_dir);
+        
+        // "Dá mais vida" para a bolinha continuar voando após o ricochete
+        // Reduzimos a distância percorrida para que ela tenha fôlego para o rebote
+        distance_traveled = max(0, distance_traveled - (max_distance * 0.3));
+    }
 }
 
 // Coleta automática ao jogador passar por cima (só após o delay)

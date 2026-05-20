@@ -27,6 +27,38 @@ if (porta_1_aberta == true && collision_temp_1 != undefined) {
 }
 
 
+// --- 0.2. Estado de Morte Animada ---
+if (hp.dead) {
+    movement.stop();
+    slingshot.cancel();
+    
+    if (sprite_index != spr_player_death) {
+        sprite_index = spr_player_death;
+        image_index = 0;
+        image_speed = 0.4; // Deixa a morte mais lenta e dramática
+    }
+    
+    // Trava no último frame da animação
+    if (image_index >= image_number - 1) {
+        image_speed = 0;
+        image_index = image_number - 1;
+        
+        // Cria a tela de morte (Game Over) quando a animação terminar
+        if (!instance_exists(obj_death_screen)) {
+            instance_create_layer(0, 0, "Instances", obj_death_screen);
+        }
+    }
+    
+    // Suaviza a parada caso o player estivesse correndo ao morrer
+    movement.apply_friction();
+    x += movement.vx;
+    y += movement.vy;
+    
+    // Mantém a câmera atualizada
+    camera.update();
+    exit; // Ignora o resto de todo o step event (bloqueia input/combate)
+}
+
 // --- 1. Input ---
 var _ix = keyboard_check(ord("D")) - keyboard_check(ord("A"));
 var _iy = keyboard_check(ord("S")) - keyboard_check(ord("W"));
@@ -112,12 +144,7 @@ if (hp.iframes > 0) {
     image_alpha = 1.0;
 }
 
-// Morte
-if (hp.dead) {
-    if (!instance_exists(obj_death_screen)) {
-        instance_create_layer(0, 0, "Instances", obj_death_screen);
-    }
-}
+// Morte (gerenciada no topo do Step para tocar a animação de morte)
 
 // --- 9. Coleta da bolinha no chao ---
 if (ball.state == ball.FLOOR && instance_exists(ball.ball_ref)) {

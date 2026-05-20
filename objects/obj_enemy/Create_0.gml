@@ -16,3 +16,7 @@ visible = true;
 image_alpha = 1;
 image_blend = c_white;
 depth = -50; // Garante que fique acima do chão
+
+// 5. Sistema de Vida e Cooldown de Hit
+hp = 2; // O caranguejo normal agora morre com 2 tiros
+hit_cooldown = 0;

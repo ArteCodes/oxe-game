@@ -1,7 +1,7 @@
 porta_1_aberta = false; 
 window_set_fullscreen(false);
 window_set_size(1280, 720);
-movement  = new MovementSystem(4, 0.5, 0.18);   // velocidade, aceleração, fricção
+movement  = new MovementSystem(10, 1, 0.18);   // velocidade, aceleração, fricção
 dodge     = new DodgeSystem(100, 20, 36);        // distância, duração, cooldown
 collision_cheia = new CollisionSystem("Tiles_Wall", 1);
 collision_barrel = new CollisionSystem("Barrel", 1);

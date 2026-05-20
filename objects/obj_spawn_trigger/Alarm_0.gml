@@ -1,7 +1,7 @@
 // Lógica de spawn sequencial
 if (spawn_count > 0) {
-    // Escolhe o tipo de caranguejo aleatoriamente (50% azul, 50% normal)
-    var _tipo = choose(obj_enemy, obj_enemy_long);
+    // Escolhe o tipo de caranguejo aleatoriamente (normal, azul ou vermelho)
+    var _tipo = choose(obj_enemy, obj_enemy_long, obj_enemy_red);
     // 2. Calcula posição aleatória próxima aos barris no meio do mapa (Coordenadas fornecidas pelo usuário)
     var _tilemap = layer_tilemap_get_id(layer_get_id("Tiles_Wall"));
     

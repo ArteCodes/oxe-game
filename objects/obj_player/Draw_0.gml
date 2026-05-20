@@ -2,42 +2,37 @@
 draw_self();
 
 // --- 1. Desenho do Estilingue ---
-// Agora ele sempre aparece e segue o mouse
-var _dir = point_direction(x, y, mouse_x, mouse_y);
-var _dist_hand = 12; // Distância do centro do player para a "mão"
-var _hand_x = x + lengthdir_x(_dist_hand, _dir);
-var _hand_y = y + lengthdir_y(_dist_hand, _dir);
+// Agora desenha o novo sprite animado em vez das linhas procedurais
+if (!hp.dead) {
+    var _dir = point_direction(x, y, mouse_x, mouse_y);
+    var _dist_hand = 10; // Distância do centro do player para a "mão"
+    var _hand_x = x + lengthdir_x(_dist_hand, _dir);
+    var _hand_y = y + lengthdir_y(_dist_hand, _dir);
 
-// Cores
-var _c_wood    = make_colour_rgb(101, 67, 33); // Marrom escuro polido
-var _c_elastic = make_colour_rgb(255, 230, 150); // Creme/Elástico
+    // Calcula o frame correspondente ao carregamento/recoil
+    var _frame = 0;
+    if (slingshot.is_charging) {
+        var _ratio = slingshot.charge_time / slingshot.CHARGE_MAX;
+        if (_ratio < 0.25) _frame = 0;
+        else if (_ratio < 0.50) _frame = 1;
+        else if (_ratio < 0.75) _frame = 2;
+        else _frame = 3;
+    } else {
+        // Se soltou recentemente e está no recoil (tensão voltando)
+        if (slingshot_recoil > 1.0) {
+            _frame = 4; // Frame do elástico solto/ondulado
+        } else {
+            _frame = 0; // Frame normal parado
+        }
+    }
 
-// 1.1 Desenha o corpo do estilingue (Y procedural)
-var _fork_angle = 35;
-var _fork_len   = 8;
-var _fork_l_x = _hand_x + lengthdir_x(_fork_len, _dir - _fork_angle);
-var _fork_l_y = _hand_y + lengthdir_y(_fork_len, _dir - _fork_angle);
-var _fork_r_x = _hand_x + lengthdir_x(_fork_len, _dir + _fork_angle);
-var _fork_r_y = _hand_y + lengthdir_y(_fork_len, _dir + _fork_angle);
-
-// Cabo
-draw_line_width_color(_hand_x, _hand_y, _hand_x - lengthdir_x(6, _dir), _hand_y - lengthdir_y(6, _dir), 3, _c_wood, _c_wood);
-// Hastes do Y
-draw_line_width_color(_hand_x, _hand_y, _fork_l_x, _fork_l_y, 2, _c_wood, _c_wood);
-draw_line_width_color(_hand_x, _hand_y, _fork_r_x, _fork_r_y, 2, _c_wood, _c_wood);
-
-// 1.2 Desenha o elástico
-var _stretch = slingshot_visual_stretch + slingshot_recoil;
-var _pull_x = _hand_x - lengthdir_x(_stretch, _dir);
-var _pull_y = _hand_y - lengthdir_y(_stretch, _dir);
-
-draw_line_width_color(_fork_l_x, _fork_l_y, _pull_x, _pull_y, 1, _c_elastic, _c_elastic);
-draw_line_width_color(_fork_r_x, _fork_r_y, _pull_x, _pull_y, 1, _c_elastic, _c_elastic);
-
-// 1.3 Desenha a bolinha sendo carregada (apenas se ela estiver disponível na bolsa)
-if (ball.state == ball.IDLE) {
-    draw_set_color(c_white);
-    draw_circle(_pull_x, _pull_y, 2, false);
+    // Desenha o estilingue rotacionado para o mouse
+    // O sprite representa um estilingue vertical que atira para a direita (0°),
+    // com o elástico sendo puxado para a esquerda. Rotacionamos diretamente por _dir
+    // para que a tração do elástico se alinhe perfeitamente na direção oposta ao mouse.
+    if (sprite_exists(spr_slingshot)) {
+        draw_sprite_ext(spr_slingshot, _frame, _hand_x, _hand_y, 0.7, 0.7, _dir, c_white, 1.0);
+    }
 }
 
 // --- Mira (lancada do centro visual do personagem) ---
