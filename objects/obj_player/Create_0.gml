@@ -45,8 +45,3 @@ current_room_track = -1;
 if (!instance_exists(obj_fog)) {
     instance_create_layer(x, y, "Instances", obj_fog);
 }
-
-// --- Inicializa a Escuridão por Áreas (Dark Reveal) na fase ---
-if (!instance_exists(obj_dark_reveal)) {
-    instance_create_layer(x, y, "Instances", obj_dark_reveal);
-}
