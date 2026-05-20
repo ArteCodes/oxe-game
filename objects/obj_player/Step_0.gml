@@ -71,7 +71,7 @@ if (keyboard_check(vk_space) && dodge.can_dodge()) {
 }
 // Ajuste: O Dodge precisa saber com qual colisão checar. 
 // Se o dash deve colidir com tudo, você precisará rodar o update para ambos ou escolher o principal.
-var _dv = dodge.update(x, y, collision_cheia); 
+var _dv = dodge.update(x, y, collision_cheia, collision_meia); 
 
 // --- 3. Estilingue ---
 var _can_shoot = dodge.can_act() && ball.can_fire();
