@@ -19,10 +19,10 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
     attack_cooldown = 120; // Tempo inicial livre antes de mandar o primeiro ataque especial (2 segundos)
     
     // Configurações dos Ataques
-    melee_range = 60; // Alcance do ataque de perto grande
-    dash_length = 240; // Comprimento da investida
+    melee_range = 100; // Alcance do ataque de perto grande (aumentado)
+    dash_length = 400; // Comprimento da investida (aumentado)
     dash_dir = 0;
-    dash_duration = 25; // Duração do avanço do dash
+    dash_duration = 35; // Duração do avanço do dash (aumentado)
     
     // Variáveis auxiliares de mira/consecução
     spike_x = 0;
@@ -93,19 +93,19 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                 
                 // 2. Escolha e Gatilho de Ataques Especiais
                 if (attack_cooldown <= 0) {
-                    // Se o player estiver extremamente perto, prefere o Melee grande
-                    if (_dist < melee_range - 10) {
+                    // Se o player estiver PERTO: ataque melee (só ativa melee de perto)
+                    if (_dist < melee_range) {
                         state = "prepare_melee";
                         timer = 0;
                         _inst.movement.vx = 0;
                         _inst.movement.vy = 0;
                     } else {
-                        // O ataque de spawn de caranguejos só é liberado na Fase 2 (vida <= 3, tomou 4+ de dano)
-                        var _attack_choice = "prepare_melee";
+                        // Se o player estiver LONGE: escolhe entre dash, spike (e spawn na Fase 2)
+                        var _attack_choice = "prepare_dash";
                         if (_inst.hp <= 3) {
-                            _attack_choice = choose("prepare_melee", "prepare_dash", "prepare_spawn", "prepare_spike");
+                            _attack_choice = choose("prepare_dash", "prepare_spawn", "prepare_spike");
                         } else {
-                            _attack_choice = choose("prepare_melee", "prepare_dash", "prepare_spike");
+                            _attack_choice = choose("prepare_dash", "prepare_spike");
                         }
                         
                         state = _attack_choice;
@@ -292,7 +292,7 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                 
                 if (instance_exists(_player)) {
                     var _spike_dist = point_distance(spike_x, spike_y, _player.x, _player.y);
-                    if (_spike_dist <= 32) { // Área de impacto de 32px
+                    if (_spike_dist <= 55) { // Área de impacto aumentada para 55px
                         _player.hp.take_damage(spike_x, spike_y, _player.x, _player.y);
                     }
                 }
@@ -348,17 +348,17 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                 break;
 
             case "prepare_spike":
-                // Círculo vermelho sob o pé do player
+                // Círculo vermelho sob o pé do player (área aumentada)
                 draw_set_alpha(0.25);
-                draw_circle_color(spike_x, spike_y, 32, c_red, c_red, false);
+                draw_circle_color(spike_x, spike_y, 55, c_red, c_red, false);
                 
                 // Contorno vermelho
                 draw_set_alpha(0.6);
-                draw_circle_color(spike_x, spike_y, 32, c_red, c_red, true);
+                draw_circle_color(spike_x, spike_y, 55, c_red, c_red, true);
                 
                 // Anel branco fechando em direção ao centro indicando tempo
                 var _progress = timer / 60.0;
-                var _r = 32.0 * (1.0 - clamp(_progress, 0.0, 1.0));
+                var _r = 55.0 * (1.0 - clamp(_progress, 0.0, 1.0));
                 draw_set_alpha(0.85);
                 draw_circle_color(spike_x, spike_y, _r, c_white, c_white, true);
                 draw_set_alpha(1.0);

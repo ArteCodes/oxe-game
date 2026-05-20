@@ -69,6 +69,7 @@
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
     {"id":{"name":"obj_spawn_trigger","path":"objects/obj_spawn_trigger/obj_spawn_trigger.yy",},},
     {"id":{"name":"obj_wall_door","path":"objects/obj_wall_door/obj_wall_door.yy",},},
+    {"id":{"name":"Object26","path":"objects/Object26/Object26.yy",},},
     {"id":{"name":"rm_main_maps","path":"rooms/rm_main_maps/rm_main_maps.yy",},},
     {"id":{"name":"rm_main_menu","path":"rooms/rm_main_menu/rm_main_menu.yy",},},
     {"id":{"name":"rm_main_tutorial_start","path":"rooms/rm_main_tutorial_start/rm_main_tutorial_start.yy",},},
