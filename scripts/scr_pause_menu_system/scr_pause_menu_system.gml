@@ -6,7 +6,7 @@ function PauseMenuSystem(_font) constructor {
     index = 0;
     pulse_timer = 0;
     
-    main_options = ["Retomar", "Ressurgir", "Voltar ao Menu", "Sair do Jogo"];
+    main_options = ["Retomar", "Volume", "Mudo", "Ressurgir", "Voltar ao Menu", "Sair do Jogo"];
     confirm_options = ["Confirmar Sair?", "Sim", "Não"];
 
     static update = function(_inst) {
@@ -16,33 +16,77 @@ function PauseMenuSystem(_font) constructor {
         var _min_idx = (state == "main") ? 0 : 1;
 
         // Navegação (Setas ou W/S)
+        var _navigated = false;
         if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) {
             index--;
             if (index < _min_idx) index = _len - 1;
+            _navigated = true;
         }
         if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) {
             index++;
             if (index >= _len) index = _min_idx;
+            _navigated = true;
+        }
+        if (_navigated) {
+            audio_play_sound(snd_menu_button, 10, false);
+        }
+
+        // Ajustes horizontais para Volume e Mudo no pause
+        if (state == "main") {
+            if (index == 1) { // Volume
+                var _changed = false;
+                if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) {
+                    global.master_volume = clamp(global.master_volume - 0.05, 0.0, 1.0);
+                    _changed = true;
+                }
+                if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"))) {
+                    global.master_volume = clamp(global.master_volume + 0.05, 0.0, 1.0);
+                    _changed = true;
+                }
+                if (_changed) {
+                    audio_set_master_gain(0, global.master_mute ? 0 : global.master_volume);
+                    audio_play_sound(snd_menu_button, 10, false);
+                }
+            }
+            else if (index == 2) { // Mudo
+                var _changed = false;
+                if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A")) || keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"))) {
+                    global.master_mute = !global.master_mute;
+                    _changed = true;
+                }
+                if (_changed) {
+                    audio_set_master_gain(0, global.master_mute ? 0 : global.master_volume);
+                    audio_play_sound(snd_menu_button, 10, false);
+                }
+            }
         }
 
         // Execução
         if (keyboard_check_pressed(vk_enter)) {
+            audio_play_sound(snd_menu_button, 10, false);
             if (state == "main") {
                 switch (index) {
                     case 0: // Retomar
                         instance_destroy(_inst); 
                         break;
-                    case 1: // Ressurgir (Reiniciar sala)
+                    case 1: // Volume
+                        // Controlado por setas laterais
+                        break;
+                    case 2: // Mudo
+                        global.master_mute = !global.master_mute;
+                        audio_set_master_gain(0, global.master_mute ? 0 : global.master_volume);
+                        break;
+                    case 3: // Ressurgir (Reiniciar sala)
                         room_restart(); 
                         break;
-                    case 2: // Voltar ao Menu Principal (Usa room_goto para manter dimensões de janela)
+                    case 4: // Voltar ao Menu Principal
                         if (room_exists(rm_main_menu)) {
                             room_goto(rm_main_menu);
                         } else {
                             game_restart();
                         }
                         break;
-                    case 3: // Sair do jogo
+                    case 5: // Sair do jogo
                         state = "confirm"; 
                         index = 1; 
                         break;
@@ -53,7 +97,7 @@ function PauseMenuSystem(_font) constructor {
                     game_end(); // Sim -> Fecha jogo
                 } else { 
                     state = "main"; 
-                    index = 3; // Não -> Volta ao menu de pausa no item Sair
+                    index = 5; // Não -> Volta ao menu de pausa no item Sair
                 }
             }
         }
@@ -78,7 +122,7 @@ function PauseMenuSystem(_font) constructor {
         var _cx = _gui_w / 2;
         var _cy = _gui_h / 2;
         var _card_w = 420;
-        var _card_h = (state == "main") ? 320 : 200;
+        var _card_h = (state == "main") ? 80 + (array_length(main_options) * 55) : 200;
         
         // Fundo do card de pausa
         draw_set_color(c_black);
@@ -101,7 +145,7 @@ function PauseMenuSystem(_font) constructor {
 
         // --- 4. Desenha as Opções do Menu de Pausa ---
         var _opts = (state == "main") ? main_options : confirm_options;
-        var _start_y = (state == "main") ? _cy - 50 : _cy - 30;
+        var _start_y = (state == "main") ? _cy - ((array_length(main_options) - 1) * 55) / 2 + 20 : _cy - 30;
         var _gap = (state == "main") ? 55 : 50;
         
         for (var _i = 0; _i < array_length(_opts); _i++) {
@@ -128,8 +172,17 @@ function PauseMenuSystem(_font) constructor {
                 draw_set_alpha(1.0);
             }
             
+            var _txt = _opts[_i];
+            if (state == "main") {
+                if (_txt == "Volume") {
+                    _txt = "Volume: " + string(round(global.master_volume * 100)) + "%";
+                } else if (_txt == "Mudo") {
+                    _txt = "Mudo: " + (global.master_mute ? "Sim" : "Não");
+                }
+            }
+            
             draw_set_color(_color);
-            draw_text_transformed(_cx, _start_y + (_i * _gap), _prefix + _opts[_i], _scale, _scale, 0);
+            draw_text_transformed(_cx, _start_y + (_i * _gap), _prefix + _txt, _scale, _scale, 0);
         }
     };
 }

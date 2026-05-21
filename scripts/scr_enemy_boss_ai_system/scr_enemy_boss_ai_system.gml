@@ -149,6 +149,7 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                 
                 // Aplica o dano no frame de impacto da animação
                 if (timer == 0) {
+                    audio_play_sound(snd_boss_attack_sfx, 10, false);
                     if (instance_exists(_player)) {
                         var _impact_dist = point_distance(_inst.x, _inst.y, _player.x, _player.y);
                         if (_impact_dist <= melee_range) {
@@ -182,6 +183,7 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                     timer = 0;
                     _inst.sprite_index = spr_attack;
                     _inst.image_speed = 0.5;
+                    audio_play_sound(snd_boss_dash, 10, false);
                 }
                 break;
 
@@ -291,6 +293,7 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
             case "spike":
                 // Cria a pata que sai do chão no local marcado (animação + dano por obj_boss_pata)
                 safe_create_layer(spike_x, spike_y, "Instances", obj_boss_pata);
+                audio_play_sound(snd_boss_attack_sfx, 10, false);
                 
                 state = "chase";
                 attack_cooldown = 120;

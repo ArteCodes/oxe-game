@@ -6,6 +6,7 @@ if (sprite_exists(spr_crab_red_death)) {
         _death.sprite_index = spr_crab_red_death;
     }
 }
+audio_play_sound(snd_enemy_death, 10, false);
 
 
 

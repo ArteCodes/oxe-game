@@ -34,6 +34,7 @@ function SlingshotSystem(_ball) constructor {
         if (_shooting && _can_shoot && !is_charging && !needs_repress) {
             is_charging = true;
             charge_time = 0;
+            audio_play_sound(snd_pull, 10, true);
         }
 
         if (is_charging) {
@@ -76,6 +77,8 @@ function SlingshotSystem(_ball) constructor {
         );
         is_charging = false;
         charge_time = 0;
+        audio_stop_sound(snd_pull);
+        audio_play_sound(snd_shoot, 10, false);
     };
 
     /// @function   get_shot_data()
@@ -103,6 +106,7 @@ function SlingshotSystem(_ball) constructor {
     static cancel = function() {
         is_charging = false;
         charge_time = 0;
+        audio_stop_sound(snd_pull);
     };
 
 }

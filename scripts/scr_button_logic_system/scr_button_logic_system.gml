@@ -35,6 +35,10 @@ function ButtonLogic(_spr_off, _spr_on) constructor {
             if (_ball_hit != noone || _player_hit != noone) {
                 is_active = true;
                 timer = 180; // Define 3 segundos (60 frames * 3) para dar mais tempo ao jogador
+                audio_play_sound(snd_button, 10, false);
+                if (_ball_hit != noone) {
+                    audio_play_sound(snd_stone_impact, 10, false);
+                }
             }
         } 
         // LÓGICA DE DESATIVAÇÃO (Contagem regressiva)

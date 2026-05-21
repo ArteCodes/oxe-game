@@ -22,6 +22,10 @@ if (!is_active) {
         
         // Define o tempo que ficará ativado
         timer = activation_time;
+        audio_play_sound(snd_button, 10, false);
+        if (_ball_hit != noone) {
+            audio_play_sound(snd_stone_impact, 10, false);
+        }
     }
 }
 // 2. DESATIVAÇÃO / CONTROLE DE TEMPO: Se ativo, trata de desativar quando necessário

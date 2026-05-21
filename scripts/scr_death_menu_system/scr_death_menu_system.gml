@@ -21,6 +21,9 @@ function DeathMenuSystem(_font) constructor {
 
         // Execução
         if (keyboard_check_pressed(vk_enter)) {
+            // Para a música de morte antes de mudar de tela
+            audio_stop_sound(snd_death);
+            
             switch (index) {
                 case 0: // Ressurgir
                     room_restart();

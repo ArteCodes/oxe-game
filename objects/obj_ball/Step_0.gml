@@ -60,6 +60,10 @@ if (_collide_y) {
     vy = -vy;
 }
 
+if (_collide_x || _collide_y) {
+    audio_play_sound(snd_stone_impact, 10, false);
+}
+
 // Mantém a direção atual e aplica a velocidade calculada pela distância
 var _dir = point_direction(0, 0, vx, vy);
 if (vx != 0 || vy != 0) {
@@ -93,6 +97,7 @@ if (_inst_enemy != noone && (abs(vx) > 0.5 || abs(vy) > 0.5)) {
     var _can_damage = !_has_cooldown || (_inst_enemy.hit_cooldown <= 0);
     
     if (_can_damage) {
+        audio_play_sound(snd_stone_impact, 10, false);
         if (!variable_instance_exists(_inst_enemy, "hp")) {
             _inst_enemy.hp = 1;
         }

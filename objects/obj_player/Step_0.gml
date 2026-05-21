@@ -51,6 +51,9 @@ if (porta_1_aberta == true && collision_temp_1 != undefined) {
 
 // --- 0.2. Estado de Morte Animada ---
 if (hp.dead) {
+    if (audio_is_playing(snd_player_run)) {
+        audio_stop_sound(snd_player_run);
+    }
     movement.stop();
     slingshot.cancel();
     
@@ -318,6 +321,7 @@ if (dialogo.ativo == true) {
     // Se o NPC deixou de existir OU o jogador andou para longe (mais de 80 pixels)
     if (!instance_exists(npc_foco) || point_distance(x, y, npc_foco.x, npc_foco.y) > 80) {
         dialogo.ativo = false; // Fecha o balão de diálogo sozinho!
+        audio_stop_sound(snd_text_typing);
     }
     
     // Se o jogador apertar E enquanto a caixa está aberta (e ele continua perto)
@@ -340,10 +344,28 @@ else {
                     }
                 }
             } else {
-                // Caso contrário, é um NPC normal: inicia diálogo
-                npc_foco = _alvo; 
-                dialogo.iniciar(_alvo.falas);
+                // Caso contrário, é um NPC normal
+                var _pode_dialogar = true;
+                if (variable_instance_exists(_alvo, "interagir")) {
+                    _pode_dialogar = _alvo.interagir();
+                }
+                if (_pode_dialogar) {
+                    npc_foco = _alvo; 
+                    dialogo.iniciar(_alvo.falas);
+                }
             }
         }
+    }
+}
+
+// --- 11. Áudio de Corrida/Passos ---
+var _is_moving = (abs(movement.vx) > 0.1 || abs(movement.vy) > 0.1) && !dodge.is_dodging && !hp.dead && !dialogo.ativo;
+if (_is_moving) {
+    if (!audio_is_playing(snd_player_run)) {
+        audio_play_sound(snd_player_run, 10, true);
+    }
+} else {
+    if (audio_is_playing(snd_player_run)) {
+        audio_stop_sound(snd_player_run);
     }
 }

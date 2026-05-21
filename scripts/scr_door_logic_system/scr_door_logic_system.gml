@@ -33,6 +33,7 @@ function DoorLogic(_btn1, _btn2, _spr_ani) constructor {
 	            _inst.sprite_index = spr_ani;
 	            _inst.image_index = 0;
 	            _inst.image_speed = 0.5; // Garante que a animação rode e destrua a porta no final
+	            audio_play_sound(snd_door_open, 10, false);
 
 	            // Limpa colisão temporária no player
 	            if (instance_exists(obj_player)) {

@@ -4,7 +4,8 @@ function MenuSystem(_font, _back) constructor {
     // --- 1. Inicialização de Variáveis ---
     font        = _font;
     background_sprite = _back;
-    options     = ["Jogar", "Sair"]; // Opções do menu
+    options     = ["Jogar", "Configurações", "Sair"]; // Opções do menu inicial
+    menu_state  = "main";            // Estados: "main", "settings"
     index       = 0;                 // Índice da opção selecionada
     pulse_timer = 0;                 // Timer para o efeito visual de pulsação
 
@@ -16,24 +17,84 @@ function MenuSystem(_font, _back) constructor {
         pulse_timer += 0.05;
 
         // Navegação entre as opções (Setas Cima/Baixo ou W/S)
+        var _navigated = false;
         if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) {
             index--;
             if (index < 0) index = array_length(options) - 1;
+            _navigated = true;
         }
         if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) {
             index++;
             if (index >= array_length(options)) index = 0;
+            _navigated = true;
+        }
+        if (_navigated) {
+            audio_play_sound(snd_menu_button, 10, false);
+        }
+
+        // Ajustes horizontais para Volume e Mudo no submenu de configurações
+        if (menu_state == "settings") {
+            if (index == 0) { // Volume
+                var _changed = false;
+                if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) {
+                    global.master_volume = clamp(global.master_volume - 0.05, 0.0, 1.0);
+                    _changed = true;
+                }
+                if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"))) {
+                    global.master_volume = clamp(global.master_volume + 0.05, 0.0, 1.0);
+                    _changed = true;
+                }
+                if (_changed) {
+                    audio_set_master_gain(0, global.master_mute ? 0 : global.master_volume);
+                    audio_play_sound(snd_menu_button, 10, false);
+                }
+            }
+            else if (index == 1) { // Mudo
+                var _changed = false;
+                if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A")) || keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"))) {
+                    global.master_mute = !global.master_mute;
+                    _changed = true;
+                }
+                if (_changed) {
+                    audio_set_master_gain(0, global.master_mute ? 0 : global.master_volume);
+                    audio_play_sound(snd_menu_button, 10, false);
+                }
+            }
         }
 
         // Execução da opção ao pressionar Enter
         if (keyboard_check_pressed(vk_enter)) {
-            switch (index) {
-                case 0: // Caso "Jogar"
-                    room_goto_next(); // Avança para a próxima sala na lista (rm_main_tutorial_start)
-                    break;
-                case 1: // Caso "Sair"
-                    game_end(); // Fecha o executável do jogo
-                    break;
+            audio_play_sound(snd_menu_button, 10, false);
+            
+            if (menu_state == "main") {
+                switch (index) {
+                    case 0: // Jogar
+                        room_goto_next(); // Avança para a próxima sala na lista (rm_main_tutorial_start)
+                        break;
+                    case 1: // Configurações
+                        menu_state = "settings";
+                        options = ["Volume", "Mudo", "Voltar"];
+                        index = 0;
+                        break;
+                    case 2: // Sair
+                        game_end(); // Fecha o executável do jogo
+                        break;
+                }
+            } else if (menu_state == "settings") {
+                switch (index) {
+                    case 0: // Volume
+                        // Controlado lateralmente
+                        break;
+                    case 1: // Mudo
+                        global.master_mute = !global.master_mute;
+                        audio_set_master_gain(0, global.master_mute ? 0 : global.master_volume);
+                        break;
+                    case 2: // Voltar
+                        menu_state = "main";
+                        options = ["Jogar", "Configurações", "Sair"];
+                        index = 1; // Foca de volta em Configurações
+                        break;
+                }
             }
         }
     }
@@ -62,9 +123,9 @@ function MenuSystem(_font, _back) constructor {
 
         // --- 3. Menu Card (Efeito Glassmorphism Premium Ajustado) ---
         var _card_w = 300;
-        var _card_h = 150;
+        var _card_h = 40 + (array_length(options) * 56);
         var _cx = _gui_w / 2;
-        var _cy = _gui_h / 2 + 130; // Posicionado mais abaixo para liberar a arte do caranguejo gigante
+        var _cy = _gui_h / 2 + 100; // Posicionado com precisão para 4 opções
         
         // Fundo do card
         draw_set_color(_color_card_bg);
@@ -85,6 +146,8 @@ function MenuSystem(_font, _back) constructor {
         draw_set_halign(fa_center);
         draw_set_valign(fa_middle);
         
+        var _start_y = _cy - ((array_length(options) - 1) * 56) / 2;
+        
         for (var _i = 0; _i < array_length(options); _i++) {
             var _is_selected = (_i == index);
             
@@ -102,7 +165,7 @@ function MenuSystem(_font, _back) constructor {
                 _btn_h = 48 * _scale;
             }
             
-            var _y_pos = _cy - 28 + (_i * 56);
+            var _y_pos = _start_y + (_i * 56);
             var _bx = _cx - _btn_w / 2;
             var _by = _y_pos - _btn_h / 2;
             // Sombra do botão sutil para dar efeito de profundidade (drop shadow)
@@ -143,7 +206,15 @@ function MenuSystem(_font, _back) constructor {
                 // Texto creme claro no fundo escuro translúcido
                 draw_set_color(_color_cream);
             }
-            draw_text_transformed(_cx, _y_pos - 1, options[_i], _scale, _scale, 0);
+            
+            var _opt_text = options[_i];
+            if (_opt_text == "Volume") {
+                _opt_text = "Volume: " + string(round(global.master_volume * 100)) + "%";
+            } else if (_opt_text == "Mudo") {
+                _opt_text = "Mudo: " + (global.master_mute ? "Sim" : "Não");
+            }
+            
+            draw_text_transformed(_cx, _y_pos - 1, _opt_text, _scale, _scale, 0);
             
             // Desenha indicadores simétricos pulsantes nas laterais apenas para a opção selecionada
             if (_is_selected) {

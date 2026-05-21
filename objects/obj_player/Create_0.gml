@@ -56,3 +56,10 @@ if (!instance_exists(obj_fog)) {
     var _target_layer = layer_exists("Instances") ? "Instances" : layer;
     instance_create_layer(x, y, _target_layer, obj_fog);
 }
+
+// --- Inicializa a música padrão da sala ---
+if (room == rm_main_maps) {
+    play_bgm(snd_sinistral_battle);
+} else if (room == rm_main_tutorial_start) {
+    play_bgm(snd_tutorial);
+}

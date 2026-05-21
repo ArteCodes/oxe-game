@@ -17,4 +17,27 @@ if (surface_exists(application_surface)) {
     }
 }
 
+// Pause all active BGM tracks
+var _bgms = [
+    snd_sinistral_battle,
+    snd_boss,
+    snd_victory,
+    snd_main_menu,
+    snd_death,
+    snd_tutorial
+];
+for (var _i = 0; _i < array_length(_bgms); _i++) {
+    if (audio_is_playing(_bgms[_i])) {
+        audio_pause_sound(_bgms[_i]);
+    }
+}
+
+// Stop looping SFX
+if (audio_is_playing(snd_player_run)) {
+    audio_stop_sound(snd_player_run);
+}
+if (audio_is_playing(snd_pull)) {
+    audio_stop_sound(snd_pull);
+}
+
 instance_deactivate_all(true);
