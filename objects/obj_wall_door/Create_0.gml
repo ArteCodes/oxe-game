@@ -1,1 +1,4 @@
-door_sys = new DoorLogic(inst_5384CE54, inst_49F2B1CB, compl_Wall_Door_ani);
+// --- Evento Criar (Create) do obj_wall_door ---
+btn1 = noone;
+btn2 = noone;
+door_sys = undefined;

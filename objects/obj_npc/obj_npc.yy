@@ -34,8 +34,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_crab_idle",
-    "path":"sprites/spr_crab_idle/spr_crab_idle.yy",
+    "name":"spr_npc_brown",
+    "path":"sprites/spr_npc_brown/spr_npc_brown.yy",
   },
   "spriteMaskId":null,
   "visible":true,

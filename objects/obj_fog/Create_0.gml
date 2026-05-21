@@ -1,4 +1,6 @@
 // --- Evento Criar (Create) do obj_fog ---
+instance_destroy();
+exit;
 
 // 1. Configurações visuais e profundidade
 depth = -120; // Desenha por cima de tudo na fase (player, inimigos, paredes), mas sob o HUD/GUI

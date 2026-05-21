@@ -136,7 +136,7 @@ function EnemyLongAiSystem(_move_spd, _shoot_delay, _spr_idle, _spr_walk) constr
             var _bx = _inst.x + lengthdir_x(16, _b_dir);
             var _by = (_inst.y - 8) + lengthdir_y(16, _b_dir);
             
-            var _bubble = instance_create_layer(_bx, _by, "Instances", obj_bubble);
+            var _bubble = safe_create_layer(_bx, _by, "Instances", obj_bubble);
             _bubble.vx = lengthdir_x(4, _b_dir);
             _bubble.vy = lengthdir_y(4, _b_dir);
         }

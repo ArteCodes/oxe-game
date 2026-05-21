@@ -1,3 +1,35 @@
+/// @function safe_create_layer(x, y, layer_name, object)
+/// @description Cria uma instância em uma camada de forma segura, com fallback para Instances, a camada do próprio objeto chamador, ou por profundidade se nada mais funcionar.
+function safe_create_layer(_x, _y, _layer_name, _object) {
+    var _target_layer = -1;
+    
+    // 1. Verifica se a camada solicitada é válida
+    if (is_string(_layer_name) && layer_exists(_layer_name)) {
+        _target_layer = layer_get_id(_layer_name);
+    } else if (layer_exists(_layer_name)) {
+        _target_layer = _layer_name;
+    }
+    
+    // 2. Fallback para "Instances"
+    if (_target_layer == -1 && layer_exists("Instances")) {
+        _target_layer = layer_get_id("Instances");
+    }
+    
+    // 3. Fallback para a própria camada do objeto chamador (self.layer)
+    if (_target_layer == -1 && variable_instance_exists(self, "layer") && layer != -1 && layer_exists(layer)) {
+        _target_layer = layer;
+    }
+    
+    // 4. Criação segura
+    if (_target_layer != -1) {
+        return instance_create_layer(_x, _y, _target_layer, _object);
+    } else {
+        // Fallback absoluto: cria usando profundidade
+        var _depth = variable_instance_exists(self, "depth") ? depth : 0;
+        return instance_create_depth(_x, _y, _depth, _object);
+    }
+}
+
 /// @function CollisionSystem(_layer_name, _id_type_collision)
 /// @description Sistema de colisão modular baseado em tipos pré-definidos.
 /// @param {string} _layer_name       Nome da camada de tiles no editor.

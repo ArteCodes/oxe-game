@@ -29,5 +29,15 @@ effect_create_above(ef_smokeup, x, y, 2, make_color_rgb(105, 105, 105));
 
 // 4. Criação opcional da animação de desintegração padrão como base
 if (sprite_exists(spr_crab_death)) {
-    instance_create_layer(x, y, "Instances", obj_enemy_death);
+    safe_create_layer(x, y, "Instances", obj_enemy_death);
 }
+
+// 5. Derruba vários cajus de cura ao derrotar o chefe (100% de chance, spawna 3 cajus)
+for (var i = 0; i < 3; i++) {
+    var _cx = x + random_range(-32, 32);
+    var _cy = y + random_range(-32, 32);
+    safe_create_layer(_cx, _cy, "Instances", obj_caju);
+}
+
+
+

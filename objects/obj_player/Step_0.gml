@@ -39,7 +39,7 @@ if (keyboard_check_pressed(vk_f4)) {
 // --- 0. Pausa ---
 if (keyboard_check_pressed(vk_escape)) {
     if (!instance_exists(obj_pause)) {
-        instance_create_layer(0, 0, "Instances", obj_pause);
+        safe_create_layer(0, 0, "Instances", obj_pause);
         exit; // Interrompe o resto do Step para o player não se mover no frame da pausa
     }
 }
@@ -67,7 +67,7 @@ if (hp.dead) {
         
         // Cria a tela de morte (Game Over) quando a animação terminar
         if (!instance_exists(obj_death_screen)) {
-            instance_create_layer(0, 0, "Instances", obj_death_screen);
+            safe_create_layer(0, 0, "Instances", obj_death_screen);
         }
     }
     
@@ -132,10 +132,60 @@ if (collision_temp_1 != undefined) {
 
 // --- 8. Aplica posicao ---
 if (dodge.is_dodging) {
+    // Colisão com porta durante a esquiva (dodge)
+    if (place_meeting(x + _dv.vx, y, obj_wall_door)) {
+        var _door_x = instance_place(x + _dv.vx, y, obj_wall_door);
+        if (_door_x != noone && (_door_x.door_sys == undefined || !_door_x.door_sys.is_opening)) {
+            if (_dv.vx != 0) {
+                while (!place_meeting(x + sign(_dv.vx), y, _door_x)) {
+                    x += sign(_dv.vx);
+                }
+            }
+            _dv.vx = 0;
+            dodge._dodge_vx = 0;
+        }
+    }
     x += _dv.vx;
+    
+    if (place_meeting(x, y + _dv.vy, obj_wall_door)) {
+        var _door_y = instance_place(x, y + _dv.vy, obj_wall_door);
+        if (_door_y != noone && (_door_y.door_sys == undefined || !_door_y.door_sys.is_opening)) {
+            if (_dv.vy != 0) {
+                while (!place_meeting(x, y + sign(_dv.vy), _door_y)) {
+                    y += sign(_dv.vy);
+                }
+            }
+            _dv.vy = 0;
+            dodge._dodge_vy = 0;
+        }
+    }
     y += _dv.vy;
 } else {
+    // Colisão com porta durante o movimento normal
+    if (place_meeting(x + movement.vx, y, obj_wall_door)) {
+        var _door_x = instance_place(x + movement.vx, y, obj_wall_door);
+        if (_door_x != noone && (_door_x.door_sys == undefined || !_door_x.door_sys.is_opening)) {
+            if (movement.vx != 0) {
+                while (!place_meeting(x + sign(movement.vx), y, _door_x)) {
+                    x += sign(movement.vx);
+                }
+            }
+            movement.vx = 0;
+        }
+    }
     x += movement.vx;
+    
+    if (place_meeting(x, y + movement.vy, obj_wall_door)) {
+        var _door_y = instance_place(x, y + movement.vy, obj_wall_door);
+        if (_door_y != noone && (_door_y.door_sys == undefined || !_door_y.door_sys.is_opening)) {
+            if (movement.vy != 0) {
+                while (!place_meeting(x, y + sign(movement.vy), _door_y)) {
+                    y += sign(movement.vy);
+                }
+            }
+            movement.vy = 0;
+        }
+    }
     y += movement.vy;
 }
 
@@ -156,7 +206,31 @@ if (_kb.vx != 0 || _kb.vy != 0) {
         _kby = collision_temp_1.resolve_y(x, y, _kby);
     }
     
+    // Colisão do Knockback com a porta
+    if (place_meeting(x + _kbx, y, obj_wall_door)) {
+        var _door_x = instance_place(x + _kbx, y, obj_wall_door);
+        if (_door_x != noone && (_door_x.door_sys == undefined || !_door_x.door_sys.is_opening)) {
+            if (_kbx != 0) {
+                while (!place_meeting(x + sign(_kbx), y, _door_x)) {
+                    x += sign(_kbx);
+                }
+            }
+            _kbx = 0;
+        }
+    }
     x += _kbx;
+    
+    if (place_meeting(x, y + _kby, obj_wall_door)) {
+        var _door_y = instance_place(x, y + _kby, obj_wall_door);
+        if (_door_y != noone && (_door_y.door_sys == undefined || !_door_y.door_sys.is_opening)) {
+            if (_kby != 0) {
+                while (!place_meeting(x, y + sign(_kby), _door_y)) {
+                    y += sign(_kby);
+                }
+            }
+            _kby = 0;
+        }
+    }
     y += _kby;
 }
 // Pisca durante i-frames
@@ -217,7 +291,7 @@ if (keyboard_check_pressed(ord("F"))) {
         instance_destroy(obj_fog);
         effect_create_above(ef_smoke, x, y, 1, c_white);
     } else {
-        instance_create_layer(x, y, "Instances", obj_fog);
+        safe_create_layer(x, y, "Instances", obj_fog);
     }
 }
 

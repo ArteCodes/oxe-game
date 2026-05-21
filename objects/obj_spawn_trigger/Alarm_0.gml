@@ -23,7 +23,7 @@ if (spawn_count > 0) {
     }
     
     // 3. Cria o inimigo
-    var _inst = instance_create_layer(_spawn_x, _spawn_y, "Instances", _tipo);
+    var _inst = safe_create_layer(_spawn_x, _spawn_y, "Instances", _tipo);
     
     // Força visibilidade e profundidade logo no spawn
     _inst.visible = true;

@@ -52,7 +52,7 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                         hp = 7;
                     }
                     hp -= 1;
-                    hit_cooldown = 20; // Frames de imunidade
+                    hit_cooldown = 60; // 60 frames (1 segundo) de imunidade para o Boss
                     
                     if (hp <= 0) {
                         instance_destroy();
@@ -244,7 +244,7 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                     var _tilemap = layer_tilemap_get_id(layer_get_id("Tiles_Wall"));
                     if (tilemap_get_at_pixel(_tilemap, _sx, _sy) == 0) {
                         var _crab_type = choose(obj_enemy, obj_enemy_long, obj_enemy_red);
-                        var _new_crab = instance_create_layer(_sx, _sy, "Instances", _crab_type);
+                        var _new_crab = safe_create_layer(_sx, _sy, "Instances", _crab_type);
                         
                         // Força o novo inimigo a "acordar" imediatamente no estado follow
                         if (instance_exists(_new_crab) && variable_instance_exists(_new_crab, "enemy_ai")) {
@@ -289,16 +289,8 @@ function EnemyBossAiSystem(_follow_spd, _dash_spd, _spr_idle, _spr_attack) const
                 break;
 
             case "spike":
-                // Executa a explosão/espinho no local marcado
-                effect_create_above(ef_ring, spike_x, spike_y, 0, c_red);
-                effect_create_above(ef_smoke, spike_x, spike_y, 1, c_orange);
-                
-                if (instance_exists(_player)) {
-                    var _spike_dist = point_distance(spike_x, spike_y, _player.x, _player.y);
-                    if (_spike_dist <= 55) { // Área de impacto aumentada para 55px
-                        _player.hp.take_damage(spike_x, spike_y, _player.x, _player.y);
-                    }
-                }
+                // Cria a pata que sai do chão no local marcado (animação + dano por obj_boss_pata)
+                safe_create_layer(spike_x, spike_y, "Instances", obj_boss_pata);
                 
                 state = "chase";
                 attack_cooldown = 120;

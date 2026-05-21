@@ -27,7 +27,7 @@ aim = new AimSystem("Tiles_Wall");
 depth = -100;
 
 // Camera
-camera = new CameraSystem(1100, 600, id);
+camera = new CameraSystem(825, 450, id);
 camera.init();
 
 // HUB
@@ -53,5 +53,6 @@ current_room_track = -1;
 
 // --- Inicializa a Névoa Atmosférica (Fog) na fase ---
 if (!instance_exists(obj_fog)) {
-    instance_create_layer(x, y, "Instances", obj_fog);
+    var _target_layer = layer_exists("Instances") ? "Instances" : layer;
+    instance_create_layer(x, y, _target_layer, obj_fog);
 }
