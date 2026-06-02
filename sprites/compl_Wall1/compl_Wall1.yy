@@ -4,7 +4,7 @@
   "bboxMode":0,
   "bbox_bottom":31,
   "bbox_left":32,
-  "bbox_right":95,
+  "bbox_right":187,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":0,
   "parent":{
-    "name":"wall",
-    "path":"folders/Sprites/wall.yy",
+    "name":"door",
+    "path":"folders/Sprites/wall/door.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":96,
+  "width":192,
 }

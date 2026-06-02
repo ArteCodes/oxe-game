@@ -31,8 +31,33 @@ function BallSystem() constructor {
     static try_fire = function(_ox, _oy, _tx, _ty, _layer, _owner, _speed, _distance) {
         if (state != IDLE) return false;
 
-        // Cria a bolinha e configura seus parametros
-        ball_ref               = instance_create_layer(_ox, _oy, _layer, obj_ball);
+        // Cria a bolinha de forma robusta e defensiva à prova de falhas
+        var _target_layer = -1;
+        
+        // 1. Verifica se a camada passada por argumento é válida e existe (deve ser string e existir, ou ser ID válido)
+        if (is_string(_layer) && layer_exists(_layer)) {
+            _target_layer = layer_get_id(_layer);
+        } else if (layer_exists(_layer)) {
+            _target_layer = _layer;
+        }
+        
+        // 2. Fallback para "Instances" se a camada anterior for inválida
+        if (_target_layer == -1 && layer_exists("Instances")) {
+            _target_layer = layer_get_id("Instances");
+        }
+        
+        // 3. Fallback para a camada do jogador se for válida (diferente de -1)
+        if (_target_layer == -1 && _owner.layer != -1 && layer_exists(_owner.layer)) {
+            _target_layer = _owner.layer;
+        }
+        
+        // 4. Criação da instância de forma segura
+        if (_target_layer != -1) {
+            ball_ref = instance_create_layer(_ox, _oy, _target_layer, obj_ball);
+        } else {
+            // Fallback absoluto: cria usando profundidade do player para evitar crashes se nenhuma camada funcionar
+            ball_ref = instance_create_depth(_ox, _oy, _owner.depth, obj_ball);
+        }
         ball_ref.owner         = _owner;
         ball_ref.initial_speed = _speed;
         ball_ref.max_distance  = _distance;

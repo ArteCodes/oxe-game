@@ -1,11 +1,46 @@
 // --- Personagem ---
 draw_self();
 
+// --- 1. Desenho do Estilingue ---
+// Agora desenha o novo sprite animado em vez das linhas procedurais
+if (!hp.dead) {
+    var _dir = point_direction(x, y, mouse_x, mouse_y);
+    var _dist_hand = 10; // Distância do centro do player para a "mão"
+    var _hand_x = x + lengthdir_x(_dist_hand, _dir);
+    var _hand_y = y + lengthdir_y(_dist_hand, _dir);
+
+    // Calcula o frame correspondente ao carregamento/recoil
+    var _frame = 0;
+    if (slingshot.is_charging) {
+        var _ratio = slingshot.charge_time / slingshot.CHARGE_MAX;
+        if (_ratio < 0.25) _frame = 0;
+        else if (_ratio < 0.50) _frame = 1;
+        else if (_ratio < 0.75) _frame = 2;
+        else _frame = 3;
+    } else {
+        // Se soltou recentemente e está no recoil (tensão voltando)
+        if (slingshot_recoil > 1.0) {
+            _frame = 4; // Frame do elástico solto/ondulado
+        } else {
+            _frame = 0; // Frame normal parado
+        }
+    }
+
+    // Desenha o estilingue rotacionado para o mouse
+    // O sprite representa um estilingue vertical que atira para a direita (0°),
+    // com o elástico sendo puxado para a esquerda. Rotacionamos diretamente por _dir
+    // para que a tração do elástico se alinhe perfeitamente na direção oposta ao mouse.
+    if (sprite_exists(spr_slingshot)) {
+        draw_sprite_ext(spr_slingshot, _frame, _hand_x, _hand_y, 0.7, 0.7, _dir, c_white, 1.0);
+    }
+}
+
 // --- Mira (lancada do centro visual do personagem) ---
 if (slingshot.is_charging) {
     var _data = slingshot.get_shot_data();
     aim.draw(x, y, mouse_x, mouse_y, _data.speed, _data.distance);
 }
+
 
 // --- Barra de carregamento do tiro (lado direito) ---
 if (slingshot.is_charging) {
@@ -84,10 +119,42 @@ if (ball.is_reloading) {
 
     draw_set_alpha(1);
 }
-
 // --- Debug: estado do dodge (remover depois) ---
 // draw_set_color(c_white);
 // var _estado = "LIVRE";
 // if (dodge.is_dodging)  _estado = "DODGE";
 // if (dodge.on_cooldown) _estado = "COOLDOWN";
 // draw_text(x - 20, y - 40, _estado);
+
+// --- 5. Prompt de Interação "E" ---
+// Procura o objeto interagível mais próximo (NPC ou Porta de Saída)
+var _prox = instance_nearest(x, y, obj_interagivel);
+if (_prox != noone && point_distance(x, y, _prox.x, _prox.y) < 80 && !dialogo.ativo && _prox.visible) {
+    var _ex = _prox.x;
+    var _ey = _prox.y - 50 + sin(current_time / 200) * 5; // Efeito flutuante
+    
+    draw_set_font(-1); // Fonte padrão ou fnt_menu se preferir
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    
+    // Desenha uma pequena sombra/fundo para a letra
+    draw_set_alpha(0.5);
+    draw_set_color(c_black);
+    draw_roundrect(_ex - 12, _ey - 12, _ex + 12, _ey + 12, false);
+    
+    // Desenha o "E"
+    draw_set_alpha(1);
+    draw_set_color(c_white);
+    draw_text(_ex, _ey, "E");
+}
+
+// --- 6. Sistema de Diálogo ---
+if (dialogo != undefined && dialogo.ativo == true) {
+    
+    // Verifica se o NPC que estamos conversando existe na sala
+    if (instance_exists(npc_foco)) {
+        
+        // Desenha a caixa usando o X e o Y do NPC, e não do jogador!
+        dialogo.desenhar(npc_foco.x, npc_foco.y - 60); 
+    }
+}

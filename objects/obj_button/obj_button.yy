@@ -30,7 +30,10 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":null,
+  "spriteId":{
+    "name":"spr_button_off",
+    "path":"sprites/spr_button_off/spr_button_off.yy",
+  },
   "spriteMaskId":null,
   "visible":true,
 }
